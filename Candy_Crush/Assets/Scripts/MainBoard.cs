@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
+using UnityEditor.EditorTools;
 using UnityEngine;
 
 public class MainBoard : MonoBehaviour
@@ -7,15 +9,22 @@ public class MainBoard : MonoBehaviour
     public int boardWidth;
     public int boardHeight;
     public GameObject mainBackgroundPref;
-    private MainBackground[,] allTiles;
+    private GameObject[,] allTiles;
+    private GameObject[,] Alldots;
+    public SpriteRenderer brdSprtRnd;
+    public GameObject[] dots;
 
     void Start()
     {
-        allTiles = new MainBackground[boardWidth, boardHeight];
+        brdSprtRnd = mainBackgroundPref.GetComponent<SpriteRenderer>();
+        Alldots = new GameObject[boardWidth, boardHeight];
+        allTiles = new GameObject[boardWidth, boardHeight];
+
         BoardIntilSetUp();
+        //DeactiveSpriteRnd();
+
     }
 
-    // Update is called once per frame
     void Update()
     {
 
@@ -27,8 +36,20 @@ public class MainBoard : MonoBehaviour
             for (int j = 0; j < boardHeight; j++)
             {
                 Vector2 tempPos = new Vector2(i, j);
-                Instantiate(mainBackgroundPref, tempPos, Quaternion.identity);
+
+                GameObject newTiles = Instantiate(mainBackgroundPref, tempPos, Quaternion.identity) as GameObject;
+                //newTiles.transform.parent = this.transform;
+                newTiles.name = "(" + i + " , " + j + ")";
+                int dotPos = Random.Range(0, dots.Length);
+                GameObject newDot = Instantiate(dots[dotPos], tempPos, Quaternion.identity);
+                //newDot.transform.parent = this.transform;
+                newDot.name = "(" + i + " , " + j + ")";
+                Alldots[i, j] = newDot;
             }
         }
+    }
+    private void DeactiveSpriteRnd()
+    {
+        brdSprtRnd.enabled = false;
     }
 }

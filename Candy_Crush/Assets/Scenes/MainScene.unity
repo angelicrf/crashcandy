@@ -200,7 +200,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.5, y: 3, z: -10}
+  m_LocalPosition: {x: 2.5, y: 4.5, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -249,6 +249,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4e05cc2bbe33e8e590ab8190ddd493b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boardWidth: 4
-  boardHeight: 7
+  boardWidth: 6
+  boardHeight: 10
   mainBackgroundPref: {fileID: 8652167485948146412, guid: 582dc039debdc8e37985b538ec789653, type: 3}
+  brdSprtRnd: {fileID: 6336323019029046517, guid: 582dc039debdc8e37985b538ec789653, type: 3}
+  dots:
+  - {fileID: 4575603142436659610, guid: 24355cea42c7cdb62b1ee1e582fc9ea2, type: 3}
+  - {fileID: 7407375209560045423, guid: f2a3cb6c998970d1884c24c554fb3bfe, type: 3}
+  - {fileID: 7841990954557784622, guid: e46eac75c2db25144a5c77456f6efa7c, type: 3}
+  - {fileID: 8913893859552928483, guid: 71658d9f611fb0bec829a734bdf4e256, type: 3}
+  - {fileID: 7392044476274715519, guid: 9e752defc2988677b9fc4608e4ab3ffb, type: 3}
+  - {fileID: 842563726807101601, guid: 692955c13e6f286bfb66f2ee166528eb, type: 3}
+  - {fileID: 8847645606571883267, guid: 48298ac94403ce8469cd40cf58c8aead, type: 3}
+  - {fileID: 5356668694054886133, guid: e41bd7bf767a9c44fbe62d460eaecd53, type: 3}
+  - {fileID: 4996225643662510867, guid: c1e93a6f538371281b4b8f33e9a10d11, type: 3}
