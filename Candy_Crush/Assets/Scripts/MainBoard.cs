@@ -10,7 +10,7 @@ public class MainBoard : MonoBehaviour
     public int boardHeight;
     public GameObject mainBackgroundPref;
     private GameObject[,] allTiles;
-    private GameObject[,] Alldots;
+    public GameObject[,] Alldots;
     public SpriteRenderer brdSprtRnd;
     public GameObject[] dots;
 
