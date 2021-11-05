@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -364112848593839881}
   m_Layer: 0
   m_Name: PinkDot
-  m_TagString: Untagged
+  m_TagString: Pink
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -97,6 +97,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   angletoChange: 0
+  isFound: 0
 --- !u!58 &-364112848593839881
 CircleCollider2D:
   m_ObjectHideFlags: 0

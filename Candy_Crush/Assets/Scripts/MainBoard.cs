@@ -38,11 +38,9 @@ public class MainBoard : MonoBehaviour
                 Vector2 tempPos = new Vector2(i, j);
 
                 GameObject newTiles = Instantiate(mainBackgroundPref, tempPos, Quaternion.identity) as GameObject;
-                //newTiles.transform.parent = this.transform;
                 newTiles.name = "(" + i + " , " + j + ")";
                 int dotPos = Random.Range(0, dots.Length);
                 GameObject newDot = Instantiate(dots[dotPos], tempPos, Quaternion.identity);
-                //newDot.transform.parent = this.transform;
                 newDot.name = "(" + i + " , " + j + ")";
                 Alldots[i, j] = newDot;
             }
