@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using UnityEditor.EditorTools;
 using UnityEngine;
@@ -21,7 +22,6 @@ public class MainBoard : MonoBehaviour
         allTiles = new GameObject[boardWidth, boardHeight];
 
         BoardIntilSetUp();
-        //DeactiveSpriteRnd();
 
     }
 
@@ -44,7 +44,6 @@ public class MainBoard : MonoBehaviour
                 while (DotMatches(i, j, dots[dotPos]) && maxRun < 100)
                 {
                     dotPos = Random.Range(0, dots.Length);
-                    Debug.Log(maxRun);
                     maxRun++;
                 }
                 maxRun = 0;
@@ -75,7 +74,7 @@ public class MainBoard : MonoBehaviour
             if (row > 1)
             {
                 if (Alldots[col, row - 1].tag == dotObject.tag
-                 || Alldots[col, row - 2].tag == dotObject.tag)
+                 && Alldots[col, row - 2].tag == dotObject.tag)
                 {
 
                     return true;
@@ -84,7 +83,7 @@ public class MainBoard : MonoBehaviour
             if (col > 1)
             {
                 if (Alldots[col - 1, row].tag == dotObject.tag
-                || Alldots[col - 2, row].tag == dotObject.tag)
+                && Alldots[col - 2, row].tag == dotObject.tag)
                 {
 
                     return true;
@@ -97,4 +96,49 @@ public class MainBoard : MonoBehaviour
     {
         brdSprtRnd.enabled = false;
     }
+    private void DestroyDot(int colmn, int row)
+    {
+        if (Alldots[colmn, row].GetComponent<Dots>().isFound)
+        {
+            Destroy(Alldots[colmn, row]);
+            Alldots[colmn, row] = null;
+        }
+    }
+    public void DestroyAfterMove()
+    {
+        int countDown = 0;
+        for (int i = 0; i < boardWidth; i++)
+        {
+            for (int j = 0; j < boardHeight; j++)
+            {
+                if (Alldots[i, j] != null)
+                {
+                    DestroyDot(i, j);
+                }
+            }
+        }
+        StartCoroutine(RemoveEmptySpace());
+    }
+    private IEnumerator RemoveEmptySpace()
+    {
+        int countDown = 0;
+        for (int i = 0; i < boardWidth; i++)
+        {
+            for (int j = 0; j < boardHeight; j++)
+            {
+                if (Alldots[i, j] == null)
+                {
+                    countDown++;
+                }
+                else if (countDown > 0)
+                {
+                    Alldots[i, j].GetComponent<Dots>().rowDot -= countDown;
+                    Debug.Log("rowDropedTwo");
+                }
+            }
+            countDown = 0;
+        }
+        yield return new WaitForSeconds(0.5f);
+    }
+
 }

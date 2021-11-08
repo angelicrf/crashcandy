@@ -9,7 +9,7 @@ public class Dots : MonoBehaviour
     private Vector2 lastDotPosition;
     public float angletoChange;
     private int columnDot;
-    private int rowDot;
+    public int rowDot;
     private int originalDotX;
     private int originalDotY;
     private int finalX;
@@ -35,32 +35,40 @@ public class Dots : MonoBehaviour
         finalX = columnDot;
         finalY = rowDot;
         FindMatchedDots();
-        if (isFound)
-        {
-            SpriteRenderer newObject = GetComponent<SpriteRenderer>();
-            newObject.color = new Color(0f, 0f, 0f, 0.2f);
-        }
+        /*   if (isFound)
+          {
+              SpriteRenderer newObject = GetComponent<SpriteRenderer>();
+              newObject.color = new Color(0f, 0f, 0f, 0.2f);
+          } */
         if (Mathf.Abs((finalX - transform.position.x)) > 0.1)
         {
             tempTargetPos = new Vector2(finalX, transform.position.y);
             transform.position = Vector2.Lerp(transform.position, tempTargetPos, Time.deltaTime);
+            if (mainBoard.Alldots[columnDot, rowDot] != this.gameObject)
+            {
+                mainBoard.Alldots[columnDot, rowDot] = this.gameObject;
+            }
         }
         else
         {
             tempTargetPos = new Vector2(finalX, transform.position.y);
             transform.position = tempTargetPos;
-            mainBoard.Alldots[columnDot, rowDot] = this.gameObject;
+
         }
         if (Mathf.Abs((finalY - transform.position.y)) > 0.1)
         {
             tempTargetPos = new Vector2(transform.position.x, finalY);
             transform.position = Vector2.Lerp(transform.position, tempTargetPos, Time.deltaTime);
+            if (mainBoard.Alldots[columnDot, rowDot] != this.gameObject)
+            {
+                mainBoard.Alldots[columnDot, rowDot] = this.gameObject;
+            }
         }
         else
         {
             tempTargetPos = new Vector2(transform.position.x, finalY);
             transform.position = tempTargetPos;
-            mainBoard.Alldots[columnDot, rowDot] = this.gameObject;
+
         }
     }
     void OnMouseDown()
@@ -117,8 +125,7 @@ public class Dots : MonoBehaviour
         {
             GameObject newDot_1 = mainBoard.Alldots[columnDot - 1, rowDot];
             GameObject newDot_2 = mainBoard.Alldots[columnDot + 1, rowDot];
-            /*            GameObject newDot_1_1 = mainBoard.Alldots[columnDot - 2, rowDot];
-                       GameObject newDot_2_1 = mainBoard.Alldots[columnDot + 2, rowDot]; */
+
             if (newDot_1 != null && newDot_2 != null)
             {
                 if ((this.gameObject.tag == newDot_2.gameObject.tag &&
@@ -126,7 +133,6 @@ public class Dots : MonoBehaviour
 
                 {
                     isFound = true;
-                    Debug.Log(isFound);
                     newDot_1.GetComponent<Dots>().isFound = true;
                     newDot_2.GetComponent<Dots>().isFound = true;
                     return isFound;
@@ -144,7 +150,6 @@ public class Dots : MonoBehaviour
 
                     {
                         isFound = true;
-                        Debug.Log(isFound);
                         newDot_1.GetComponent<Dots>().isFound = true;
                         newDot_2.GetComponent<Dots>().isFound = true;
                         return isFound;
@@ -167,7 +172,12 @@ public class Dots : MonoBehaviour
                 columnDot = originalDotX;
                 rowDot = originalDotY;
             }
-            otherDot = null;
+            else
+            {
+                mainBoard.DestroyAfterMove();
+            }
         }
+        otherDot = null;
     }
+
 }
