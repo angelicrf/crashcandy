@@ -18,6 +18,7 @@ public class Dots : MonoBehaviour
     private GameObject otherDot;
     private Vector2 tempTargetPos;
     public bool isFound = false;
+    public float isOkSwipe = 1f;
     void Start()
     {
         mainBoard = FindObjectOfType<MainBoard>();
@@ -64,12 +65,16 @@ public class Dots : MonoBehaviour
     }
     void OnMouseDown()
     {
+
         startDotPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
     }
     void OnMouseUp()
     {
-        lastDotPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        CalculateDifAngle();
+        if (Mathf.Abs(lastDotPosition.y - startDotPosition.y) > isOkSwipe || Mathf.Abs(lastDotPosition.x - startDotPosition.x) > isOkSwipe)
+        {
+            lastDotPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            CalculateDifAngle();
+        }
     }
     void CalculateDifAngle()
     {
@@ -108,24 +113,45 @@ public class Dots : MonoBehaviour
     }
     bool FindMatchedDots()
     {
-        if (columnDot > 0 && columnDot < mainBoard.boardWidth - 1 && rowDot > 0 && rowDot < mainBoard.boardHeight - 1)
+        if (columnDot > 0 && columnDot < mainBoard.boardWidth - 1)
         {
             GameObject newDot_1 = mainBoard.Alldots[columnDot - 1, rowDot];
             GameObject newDot_2 = mainBoard.Alldots[columnDot + 1, rowDot];
-            /*             GameObject newDot_3 = mainBoard.Alldots[columnDot, rowDot - 1];
-                        GameObject newDot_4 = mainBoard.Alldots[columnDot, rowDot + 1]; */
-            if ((this.gameObject.tag == newDot_2.gameObject.tag &&
-                this.gameObject.tag == newDot_1.gameObject.tag))
-            /* ||
-            (this.gameObject.tag == newDot_3.gameObject.tag &&
-            this.gameObject.tag == newDot_4.gameObject.tag)) */
+            /*            GameObject newDot_1_1 = mainBoard.Alldots[columnDot - 2, rowDot];
+                       GameObject newDot_2_1 = mainBoard.Alldots[columnDot + 2, rowDot]; */
+            if (newDot_1 != null && newDot_2 != null)
             {
-                isFound = true;
-                Debug.Log(isFound);
-                newDot_1.GetComponent<Dots>().isFound = true;
-                newDot_2.GetComponent<Dots>().isFound = true;
-                return isFound;
+                if ((this.gameObject.tag == newDot_2.gameObject.tag &&
+                    this.gameObject.tag == newDot_1.gameObject.tag))
+
+                {
+                    isFound = true;
+                    Debug.Log(isFound);
+                    newDot_1.GetComponent<Dots>().isFound = true;
+                    newDot_2.GetComponent<Dots>().isFound = true;
+                    return isFound;
+                }
             }
+            if (rowDot > 0 && rowDot < mainBoard.boardHeight - 1)
+            {
+                GameObject newDot_3 = mainBoard.Alldots[columnDot, rowDot + 1];
+                GameObject newDot_4 = mainBoard.Alldots[columnDot, rowDot - 1];
+
+                if (newDot_3 != null && newDot_4 != null)
+                {
+                    if ((this.gameObject.tag == newDot_3.gameObject.tag &&
+                        this.gameObject.tag == newDot_4.gameObject.tag))
+
+                    {
+                        isFound = true;
+                        Debug.Log(isFound);
+                        newDot_1.GetComponent<Dots>().isFound = true;
+                        newDot_2.GetComponent<Dots>().isFound = true;
+                        return isFound;
+                    }
+                }
+            }
+
         }
         return isFound;
     }
@@ -136,7 +162,6 @@ public class Dots : MonoBehaviour
         {
             if (!isFound && !otherDot.GetComponent<Dots>().isFound)
             {
-                Debug.Log("DontMoveCalled");
                 otherDot.GetComponent<Dots>().columnDot = columnDot;
                 otherDot.GetComponent<Dots>().rowDot = rowDot;
                 columnDot = originalDotX;
