@@ -35,11 +35,7 @@ public class Dots : MonoBehaviour
         finalX = columnDot;
         finalY = rowDot;
         FindMatchedDots();
-        /*   if (isFound)
-          {
-              SpriteRenderer newObject = GetComponent<SpriteRenderer>();
-              newObject.color = new Color(0f, 0f, 0f, 0.2f);
-          } */
+
         if (Mathf.Abs((finalX - transform.position.x)) > 0.1)
         {
             tempTargetPos = new Vector2(finalX, transform.position.y);
@@ -150,8 +146,8 @@ public class Dots : MonoBehaviour
 
                     {
                         isFound = true;
-                        newDot_1.GetComponent<Dots>().isFound = true;
-                        newDot_2.GetComponent<Dots>().isFound = true;
+                        newDot_3.GetComponent<Dots>().isFound = true;
+                        newDot_4.GetComponent<Dots>().isFound = true;
                         return isFound;
                     }
                 }

@@ -14,12 +14,14 @@ public class MainBoard : MonoBehaviour
     public GameObject[,] Alldots;
     public SpriteRenderer brdSprtRnd;
     public GameObject[] dots;
+    private bool isDroped;
 
     void Start()
     {
         brdSprtRnd = mainBackgroundPref.GetComponent<SpriteRenderer>();
         Alldots = new GameObject[boardWidth, boardHeight];
         allTiles = new GameObject[boardWidth, boardHeight];
+        isDroped = false;
 
         BoardIntilSetUp();
 
@@ -118,6 +120,21 @@ public class MainBoard : MonoBehaviour
             }
         }
         StartCoroutine(RemoveEmptySpace());
+
+    }
+    private void DestroyDotsOnce()
+    {
+        int countDown = 0;
+        for (int i = 0; i < boardWidth; i++)
+        {
+            for (int j = 0; j < boardHeight; j++)
+            {
+                if (Alldots[i, j] != null)
+                {
+                    DestroyDot(i, j);
+                }
+            }
+        }
     }
     private IEnumerator RemoveEmptySpace()
     {
@@ -133,12 +150,71 @@ public class MainBoard : MonoBehaviour
                 else if (countDown > 0)
                 {
                     Alldots[i, j].GetComponent<Dots>().rowDot -= countDown;
-                    Debug.Log("rowDropedTwo");
                 }
             }
             countDown = 0;
         }
         yield return new WaitForSeconds(0.5f);
+        StartCoroutine(StepsToRefile());
+        //StartCoroutine(RefilleDot());
     }
+    private IEnumerator RefilleDot()
+    {
 
+        ClearBoard();
+        yield return new WaitForSeconds(0.5f);
+        for (int i = 0; i < boardWidth; i++)
+        {
+            for (int j = 0; j < boardHeight; j++)
+            {
+                if (!Alldots[i, j])
+                {
+                    Vector2 tempRefillPos = new Vector2(i, j);
+                    int thisRefill = Random.Range(0, dots.Length);
+                    GameObject newRefillObj = Instantiate(dots[thisRefill], tempRefillPos, Quaternion.identity);
+                    Alldots[i, j] = newRefillObj;
+                    newRefillObj.name = "(" + i + " , " + j + ")";
+                }
+            }
+        }
+    }
+    private bool IsMatchedDots()
+    {
+        for (int i = 0; i < boardWidth; i++)
+        {
+            for (int j = 0; j < boardHeight; j++)
+            {
+                if (Alldots[i, j] != null)
+                {
+                    if (Alldots[i, j].GetComponent<Dots>().isFound)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    private void ClearBoard()
+    {
+        for (int i = 0; i < boardWidth; i++)
+        {
+            for (int j = 0; j < boardHeight; j++)
+            {
+                Destroy(Alldots[i, j]);
+                Alldots[i, j] = null;
+            }
+        }
+    }
+    private IEnumerator StepsToRefile()
+    {
+        StartCoroutine(RefilleDot());
+        yield return new WaitForSeconds(0.7f);
+        //if we want to do the proccess repeatedly use do while
+        if (IsMatchedDots())
+        {
+            yield return new WaitForSeconds(0.7f);
+            DestroyAfterMove();
+        };
+    }
 }
