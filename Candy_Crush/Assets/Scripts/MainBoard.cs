@@ -18,12 +18,13 @@ public class MainBoard : MonoBehaviour
 
     void Start()
     {
+
         brdSprtRnd = mainBackgroundPref.GetComponent<SpriteRenderer>();
         Alldots = new GameObject[boardWidth, boardHeight];
         allTiles = new GameObject[boardWidth, boardHeight];
         isDroped = false;
 
-        BoardIntilSetUp();
+        StartCoroutine(BoardIntilSetUp());
 
     }
 
@@ -31,7 +32,7 @@ public class MainBoard : MonoBehaviour
     {
 
     }
-    private void BoardIntilSetUp()
+    private IEnumerator BoardIntilSetUp()
     {
         for (int i = 0; i < boardWidth; i++)
         {
@@ -42,16 +43,21 @@ public class MainBoard : MonoBehaviour
                 GameObject newTiles = Instantiate(mainBackgroundPref, tempPos, Quaternion.identity) as GameObject;
                 newTiles.name = "(" + i + " , " + j + ")";
                 int dotPos = Random.Range(0, dots.Length);
-                int maxRun = 0;
-                while (DotMatches(i, j, dots[dotPos]) && maxRun < 100)
-                {
-                    dotPos = Random.Range(0, dots.Length);
-                    maxRun++;
-                }
-                maxRun = 0;
+
                 GameObject newDot = Instantiate(dots[dotPos], tempPos, Quaternion.identity);
                 newDot.name = "(" + i + " , " + j + ")";
                 Alldots[i, j] = newDot;
+
+                int maxRun = 0;
+                //yield return new WaitForSeconds(0.5f);
+                while (DotMatches(i, j, dots[dotPos]) && maxRun < 100)
+                {
+                    //dotPos = Random.Range(0, dots.Length);
+                    DestroyAfterMove();
+                    maxRun++;
+                    yield return new WaitForSeconds(0.5f);
+                }
+                maxRun = 0;
             }
         }
     }
@@ -108,33 +114,17 @@ public class MainBoard : MonoBehaviour
     }
     public void DestroyAfterMove()
     {
-        int countDown = 0;
         for (int i = 0; i < boardWidth; i++)
         {
             for (int j = 0; j < boardHeight; j++)
             {
-                if (Alldots[i, j] != null)
+                if (Alldots[i, j])
                 {
                     DestroyDot(i, j);
                 }
             }
         }
         StartCoroutine(RemoveEmptySpace());
-
-    }
-    private void DestroyDotsOnce()
-    {
-        int countDown = 0;
-        for (int i = 0; i < boardWidth; i++)
-        {
-            for (int j = 0; j < boardHeight; j++)
-            {
-                if (Alldots[i, j] != null)
-                {
-                    DestroyDot(i, j);
-                }
-            }
-        }
     }
     private IEnumerator RemoveEmptySpace()
     {
@@ -143,41 +133,47 @@ public class MainBoard : MonoBehaviour
         {
             for (int j = 0; j < boardHeight; j++)
             {
-                if (Alldots[i, j] == null)
-                {
-                    countDown++;
-                }
-                else if (countDown > 0)
-                {
-                    Alldots[i, j].GetComponent<Dots>().rowDot -= countDown;
-                }
-            }
-            countDown = 0;
-        }
-        yield return new WaitForSeconds(0.5f);
-        StartCoroutine(StepsToRefile());
-        //StartCoroutine(RefilleDot());
-    }
-    private IEnumerator RefilleDot()
-    {
-
-        ClearBoard();
-        yield return new WaitForSeconds(0.5f);
-        for (int i = 0; i < boardWidth; i++)
-        {
-            for (int j = 0; j < boardHeight; j++)
-            {
                 if (!Alldots[i, j])
                 {
+                    countDown++;
                     Vector2 tempRefillPos = new Vector2(i, j);
                     int thisRefill = Random.Range(0, dots.Length);
                     GameObject newRefillObj = Instantiate(dots[thisRefill], tempRefillPos, Quaternion.identity);
                     Alldots[i, j] = newRefillObj;
                     newRefillObj.name = "(" + i + " , " + j + ")";
                 }
+                else if (countDown > 0)
+                {
+                    //Alternative to drop rows
+                    //Alldots[i, j].GetComponent<Dots>().rowDot -= countDown;
+                }
+
+            }
+            countDown = 0;
+        }
+        yield return new WaitForSeconds(0.5f);
+        StartCoroutine(StepsToRefile());
+    }
+    delegate void RefilleDot(int dlCol, int dlRow, GameObject[,] thisDot, GameObject[] spDot);
+    RefilleDot RefileThis = delegate (int dlCol, int dlRow, GameObject[,] thisDot, GameObject[] spDot)
+    {
+        for (int i = 0; i < dlCol; i++)
+        {
+            for (int j = 0; j < dlRow; j++)
+            {
+                {//if array of elements are null  
+
+                    Vector2 tempRefillPos = new Vector2(i, j);
+                    int thisRefill = Random.Range(0, spDot.Length);
+                    GameObject newRefillObj = Instantiate(spDot[thisRefill], tempRefillPos, Quaternion.identity);
+                    thisDot[i, j] = newRefillObj;
+                    newRefillObj.name = "(" + i + " , " + j + ")";
+
+                }
             }
         }
-    }
+    };
+
     private bool IsMatchedDots()
     {
         for (int i = 0; i < boardWidth; i++)
@@ -208,13 +204,14 @@ public class MainBoard : MonoBehaviour
     }
     private IEnumerator StepsToRefile()
     {
-        StartCoroutine(RefilleDot());
+        //StartCoroutine(RefilleDot());
         yield return new WaitForSeconds(0.7f);
-        //if we want to do the proccess repeatedly use do while
-        if (IsMatchedDots())
+        while (IsMatchedDots())
         {
+            Debug.Log("thereisMatch..");
             yield return new WaitForSeconds(0.7f);
             DestroyAfterMove();
-        };
+
+        }
     }
 }

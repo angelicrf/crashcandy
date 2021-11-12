@@ -15,7 +15,7 @@ public class Dots : MonoBehaviour
     private int finalX;
     private int finalY;
     private MainBoard mainBoard;
-    private GameObject otherDot;
+    public GameObject otherDot;
     private Vector2 tempTargetPos;
     public bool isFound = false;
     public float isOkSwipe = 1f;
@@ -119,36 +119,42 @@ public class Dots : MonoBehaviour
     {
         if (columnDot > 0 && columnDot < mainBoard.boardWidth - 1)
         {
-            GameObject newDot_1 = mainBoard.Alldots[columnDot - 1, rowDot];
-            GameObject newDot_2 = mainBoard.Alldots[columnDot + 1, rowDot];
-
-            if (newDot_1 != null && newDot_2 != null)
+            if (mainBoard.Alldots[columnDot - 1, rowDot] || mainBoard.Alldots[columnDot + 1, rowDot])
             {
-                if ((this.gameObject.tag == newDot_2.gameObject.tag &&
-                    this.gameObject.tag == newDot_1.gameObject.tag))
+                GameObject newDot_1 = mainBoard.Alldots[columnDot - 1, rowDot];
+                GameObject newDot_2 = mainBoard.Alldots[columnDot + 1, rowDot];
 
+                if (newDot_1 != null && newDot_2 != null)
                 {
-                    isFound = true;
-                    newDot_1.GetComponent<Dots>().isFound = true;
-                    newDot_2.GetComponent<Dots>().isFound = true;
-                    return isFound;
+                    if ((this.gameObject.tag == newDot_2.gameObject.tag &&
+                        this.gameObject.tag == newDot_1.gameObject.tag))
+
+                    {
+                        isFound = true;
+                        newDot_1.GetComponent<Dots>().isFound = true;
+                        newDot_2.GetComponent<Dots>().isFound = true;
+                        return isFound;
+                    }
                 }
             }
             if (rowDot > 0 && rowDot < mainBoard.boardHeight - 1)
             {
-                GameObject newDot_3 = mainBoard.Alldots[columnDot, rowDot + 1];
-                GameObject newDot_4 = mainBoard.Alldots[columnDot, rowDot - 1];
-
-                if (newDot_3 != null && newDot_4 != null)
+                if (mainBoard.Alldots[columnDot, rowDot + 1] || mainBoard.Alldots[columnDot, rowDot - 1])
                 {
-                    if ((this.gameObject.tag == newDot_3.gameObject.tag &&
-                        this.gameObject.tag == newDot_4.gameObject.tag))
+                    GameObject newDot_3 = mainBoard.Alldots[columnDot, rowDot + 1];
+                    GameObject newDot_4 = mainBoard.Alldots[columnDot, rowDot - 1];
 
+                    if (newDot_3 != null && newDot_4 != null)
                     {
-                        isFound = true;
-                        newDot_3.GetComponent<Dots>().isFound = true;
-                        newDot_4.GetComponent<Dots>().isFound = true;
-                        return isFound;
+                        if ((this.gameObject.tag == newDot_3.gameObject.tag &&
+                            this.gameObject.tag == newDot_4.gameObject.tag))
+
+                        {
+                            isFound = true;
+                            newDot_3.GetComponent<Dots>().isFound = true;
+                            newDot_4.GetComponent<Dots>().isFound = true;
+                            return isFound;
+                        }
                     }
                 }
             }
@@ -171,6 +177,8 @@ public class Dots : MonoBehaviour
             else
             {
                 mainBoard.DestroyAfterMove();
+                //yield return new WaitForSeconds(.5f);
+                //mainBoard.DoRefillDots();
             }
         }
         otherDot = null;
