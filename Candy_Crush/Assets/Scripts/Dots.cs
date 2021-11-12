@@ -19,8 +19,10 @@ public class Dots : MonoBehaviour
     private Vector2 tempTargetPos;
     public bool isFound = false;
     public float isOkSwipe = 1f;
+    private FindMatchDots findNewMethod;
     void Start()
     {
+        findNewMethod = FindObjectOfType<FindMatchDots>();
         mainBoard = FindObjectOfType<MainBoard>();
         finalX = (int)transform.position.x;
         finalY = (int)transform.position.y;
@@ -34,8 +36,8 @@ public class Dots : MonoBehaviour
     {
         finalX = columnDot;
         finalY = rowDot;
-        FindMatchedDots();
-
+        //FindMatchedDots();
+        findNewMethod.FoundMatchesDots();
         if (Mathf.Abs((finalX - transform.position.x)) > 0.1)
         {
             tempTargetPos = new Vector2(finalX, transform.position.y);
@@ -59,6 +61,7 @@ public class Dots : MonoBehaviour
             {
                 mainBoard.Alldots[columnDot, rowDot] = this.gameObject;
             }
+
         }
         else
         {
@@ -177,7 +180,7 @@ public class Dots : MonoBehaviour
         yield return new WaitForSeconds(.5f);
         if (otherDot != null)
         {
-            if (!isFound && !otherDot.GetComponent<Dots>().isFound)
+            if (!otherDot.GetComponent<Dots>().isFound)
             {
                 otherDot.GetComponent<Dots>().columnDot = columnDot;
                 otherDot.GetComponent<Dots>().rowDot = rowDot;

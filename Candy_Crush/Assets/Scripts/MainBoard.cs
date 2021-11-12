@@ -16,12 +16,13 @@ public class MainBoard : MonoBehaviour
     public SpriteRenderer brdSprtRnd;
     public GameObject[] dots;
     private bool isDroped;
+    private FindMatchDots findMatchDots;
 
     public DotStatus currentDotStatus = DotStatus.move;
 
     void Start()
     {
-
+        findMatchDots = FindObjectOfType<FindMatchDots>();
         brdSprtRnd = mainBackgroundPref.GetComponent<SpriteRenderer>();
         Alldots = new GameObject[boardWidth, boardHeight];
         allTiles = new GameObject[boardWidth, boardHeight];
@@ -112,6 +113,8 @@ public class MainBoard : MonoBehaviour
     {
         if (Alldots[colmn, row].GetComponent<Dots>().isFound)
         {
+            //remove them from a List
+            findMatchDots.allMatchesFound.Remove(Alldots[colmn, row]);
             Destroy(Alldots[colmn, row]);
             Alldots[colmn, row] = null;
         }

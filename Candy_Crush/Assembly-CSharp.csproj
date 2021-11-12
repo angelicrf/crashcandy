@@ -36,9 +36,10 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\Dots.cs" />
      <Compile Include="Assets\Scripts\MainBackground.cs" />
      <Compile Include="Assets\Scripts\MainBoard.cs" />
-     <Compile Include="Assets\Scripts\Dots.cs" />
+     <Compile Include="Assets\Scripts\FindMatchDots.cs" />
     <Reference Include="UnityEngine">
         <HintPath>/home/bcuser/Unity_Prjs/2020.3.13f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>

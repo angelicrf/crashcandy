@@ -13,6 +13,7 @@ TagManager:
   - Purple
   - Red
   - Yellow
+  - FindMatchDot
   layers:
   - Default
   - TransparentFX
