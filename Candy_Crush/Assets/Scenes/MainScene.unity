@@ -159,7 +159,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.70825917, g: 0.77035123, b: 0.8679245, a: 0}
+  m_BackGroundColor: {r: 0.076762185, g: 0.1010424, b: 0.14150941, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -275,7 +275,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2121662492}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.11, y: -0.16, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -307,4 +307,5 @@ MonoBehaviour:
   - {fileID: 8847645606571883267, guid: 48298ac94403ce8469cd40cf58c8aead, type: 3}
   - {fileID: 5356668694054886133, guid: e41bd7bf767a9c44fbe62d460eaecd53, type: 3}
   - {fileID: 4996225643662510867, guid: c1e93a6f538371281b4b8f33e9a10d11, type: 3}
+  ballonEffect: {fileID: 4477579567210601822, guid: 4a947f5b30e5db24f95439a19e6fd705, type: 3}
   currentDotStatus: 0

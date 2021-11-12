@@ -37,7 +37,7 @@ public class Dots : MonoBehaviour
         finalX = columnDot;
         finalY = rowDot;
         //FindMatchedDots();
-        findNewMethod.FoundMatchesDots();
+        StartCoroutine(findNewMethod.FoundMatchesDots());
         if (Mathf.Abs((finalX - transform.position.x)) > 0.1)
         {
             tempTargetPos = new Vector2(finalX, transform.position.y);
@@ -180,15 +180,20 @@ public class Dots : MonoBehaviour
         yield return new WaitForSeconds(.5f);
         if (otherDot != null)
         {
+            Debug.Log("otherDot is noNull");
             if (!otherDot.GetComponent<Dots>().isFound)
             {
+                Debug.Log("notMoved");
                 otherDot.GetComponent<Dots>().columnDot = columnDot;
                 otherDot.GetComponent<Dots>().rowDot = rowDot;
                 columnDot = originalDotX;
                 rowDot = originalDotY;
+                yield return new WaitForSeconds(.5f);
+                mainBoard.currentDotStatus = DotStatus.move;
             }
             else
             {
+                Debug.Log("moved");
                 mainBoard.DestroyAfterMove();
                 yield return new WaitForSeconds(.5f);
                 mainBoard.currentDotStatus = DotStatus.move;

@@ -15,6 +15,7 @@ public class MainBoard : MonoBehaviour
     public GameObject[,] Alldots;
     public SpriteRenderer brdSprtRnd;
     public GameObject[] dots;
+    public GameObject ballonEffect;
     private bool isDroped;
     private FindMatchDots findMatchDots;
 
@@ -111,10 +112,11 @@ public class MainBoard : MonoBehaviour
     }
     private void DestroyDot(int colmn, int row)
     {
+        Debug.Log("what isFound " + Alldots[colmn, row].GetComponent<Dots>().isFound);
         if (Alldots[colmn, row].GetComponent<Dots>().isFound)
         {
-            //remove them from a List
             findMatchDots.allMatchesFound.Remove(Alldots[colmn, row]);
+            Instantiate(ballonEffect, Alldots[colmn, row].transform.position, Quaternion.identity);
             Destroy(Alldots[colmn, row]);
             Alldots[colmn, row] = null;
         }
@@ -227,8 +229,8 @@ public class MainBoard : MonoBehaviour
         yield return new WaitForSeconds(0.7f);
         while (IsMatchedDots())
         {
-            Debug.Log("thereisMatch..");
             yield return new WaitForSeconds(0.5f);
+            Debug.Log("thereisMatch..");
             DestroyAfterMove();
             yield return new WaitForSeconds(0.5f);
             currentDotStatus = DotStatus.move;

@@ -23,8 +23,9 @@ public class FindMatchDots : MonoBehaviour
     {
 
     }
-    public bool FoundMatchesDots()
+    public IEnumerator FoundMatchesDots()
     {
+        yield return new WaitForSeconds(0.4f);
         for (int i = 0; i < mainBoard.boardWidth; i++)
         {
             for (int j = 0; j < mainBoard.boardHeight; j++)
@@ -52,8 +53,8 @@ public class FindMatchDots : MonoBehaviour
                                 currentMatch.GetComponent<Dots>().isFound = true;
                                 leftDot.GetComponent<Dots>().isFound = true;
                                 rightDot.GetComponent<Dots>().isFound = true;
-                                Debug.Log("matchedCulumn.");
-                                return currentMatch.GetComponent<Dots>().isFound;
+
+                                //return currentMatch.GetComponent<Dots>().isFound;
                             }
                         }
                     }
@@ -80,14 +81,14 @@ public class FindMatchDots : MonoBehaviour
                                 currentMatch.GetComponent<Dots>().isFound = true;
                                 upDot.GetComponent<Dots>().isFound = true;
                                 downDot.GetComponent<Dots>().isFound = true;
-                                Debug.Log("matchedRow..");
-                                return currentMatch.GetComponent<Dots>().isFound;
+
+                                //return currentMatch.GetComponent<Dots>().isFound;
                             }
                         }
                     }
                 }
             }
         }
-        return false;
+        //return false;
     }
 }
