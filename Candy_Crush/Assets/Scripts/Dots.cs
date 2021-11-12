@@ -69,22 +69,32 @@ public class Dots : MonoBehaviour
     }
     void OnMouseDown()
     {
-
-        startDotPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        if (mainBoard.currentDotStatus == DotStatus.move)
+        {
+            startDotPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        }
     }
     void OnMouseUp()
     {
-        if (Mathf.Abs(lastDotPosition.y - startDotPosition.y) > isOkSwipe || Mathf.Abs(lastDotPosition.x - startDotPosition.x) > isOkSwipe)
+        if (mainBoard.currentDotStatus == DotStatus.move)
         {
             lastDotPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             CalculateDifAngle();
         }
+
     }
     void CalculateDifAngle()
     {
-        angletoChange = Mathf.Atan2(lastDotPosition.y - startDotPosition.y, lastDotPosition.x - startDotPosition.x) * 180 / Mathf.PI;
-        //Debug.Log("angelsDot " + angletoChange);
-        MoveDots();
+        if (Mathf.Abs(lastDotPosition.y - startDotPosition.y) > isOkSwipe || Mathf.Abs(lastDotPosition.x - startDotPosition.x) > isOkSwipe)
+        {
+            angletoChange = Mathf.Atan2(lastDotPosition.y - startDotPosition.y, lastDotPosition.x - startDotPosition.x) * 180 / Mathf.PI;
+            MoveDots();
+            mainBoard.currentDotStatus = DotStatus.pause;
+        }
+        else
+        {
+            mainBoard.currentDotStatus = DotStatus.move;
+        }
     }
     void MoveDots()
     {
@@ -177,8 +187,8 @@ public class Dots : MonoBehaviour
             else
             {
                 mainBoard.DestroyAfterMove();
-                //yield return new WaitForSeconds(.5f);
-                //mainBoard.DoRefillDots();
+                yield return new WaitForSeconds(.5f);
+                mainBoard.currentDotStatus = DotStatus.move;
             }
         }
         otherDot = null;

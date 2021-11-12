@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using UnityEditor.EditorTools;
 using UnityEngine;
 
+public enum DotStatus { move, pause };
 public class MainBoard : MonoBehaviour
 {
     public int boardWidth;
@@ -15,6 +16,8 @@ public class MainBoard : MonoBehaviour
     public SpriteRenderer brdSprtRnd;
     public GameObject[] dots;
     private bool isDroped;
+
+    public DotStatus currentDotStatus = DotStatus.move;
 
     void Start()
     {
@@ -222,9 +225,10 @@ public class MainBoard : MonoBehaviour
         while (IsMatchedDots())
         {
             Debug.Log("thereisMatch..");
-            yield return new WaitForSeconds(0.7f);
+            yield return new WaitForSeconds(0.5f);
             DestroyAfterMove();
-
+            yield return new WaitForSeconds(0.5f);
+            currentDotStatus = DotStatus.move;
         }
     }
 }
