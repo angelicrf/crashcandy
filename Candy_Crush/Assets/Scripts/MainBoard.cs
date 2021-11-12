@@ -48,7 +48,7 @@ public class MainBoard : MonoBehaviour
                 newDot.name = "(" + i + " , " + j + ")";
                 Alldots[i, j] = newDot;
 
-                int maxRun = 0;
+                /* int maxRun = 0;
                 //yield return new WaitForSeconds(0.5f);
                 while (DotMatches(i, j, dots[dotPos]) && maxRun < 100)
                 {
@@ -57,9 +57,10 @@ public class MainBoard : MonoBehaviour
                     maxRun++;
                     yield return new WaitForSeconds(0.5f);
                 }
-                maxRun = 0;
+                maxRun = 0; */
             }
         }
+        yield return new WaitForSeconds(0.5f);
     }
     private bool DotMatches(int col, int row, GameObject dotObject)
     {
@@ -136,16 +137,11 @@ public class MainBoard : MonoBehaviour
                 if (!Alldots[i, j])
                 {
                     countDown++;
-                    Vector2 tempRefillPos = new Vector2(i, j);
-                    int thisRefill = Random.Range(0, dots.Length);
-                    GameObject newRefillObj = Instantiate(dots[thisRefill], tempRefillPos, Quaternion.identity);
-                    Alldots[i, j] = newRefillObj;
-                    newRefillObj.name = "(" + i + " , " + j + ")";
                 }
                 else if (countDown > 0)
                 {
-                    //Alternative to drop rows
-                    //Alldots[i, j].GetComponent<Dots>().rowDot -= countDown;
+                    Alldots[i, j].GetComponent<Dots>().rowDot -= countDown;
+                    Alldots[i, j] = null;
                 }
 
             }
@@ -202,9 +198,26 @@ public class MainBoard : MonoBehaviour
             }
         }
     }
+    private void RefilleNewDots()
+    {
+        for (int i = 0; i < boardWidth; i++)
+        {
+            for (int j = 0; j < boardHeight; j++)
+            {
+                if (!Alldots[i, j])
+                {
+                    Vector2 tempRefillPos = new Vector2(i, j);
+                    int thisRefill = Random.Range(0, dots.Length);
+                    GameObject newRefillObj = Instantiate(dots[thisRefill], tempRefillPos, Quaternion.identity);
+                    Alldots[i, j] = newRefillObj;
+                    newRefillObj.name = "(" + i + " , " + j + ")";
+                }
+            }
+        }
+    }
     private IEnumerator StepsToRefile()
     {
-        //StartCoroutine(RefilleDot());
+        RefilleNewDots();
         yield return new WaitForSeconds(0.7f);
         while (IsMatchedDots())
         {
