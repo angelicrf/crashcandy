@@ -117,6 +117,8 @@ public class MainBoard : MonoBehaviour
         {
             findMatchDots.allMatchesFound.Remove(Alldots[colmn, row]);
             Instantiate(ballonEffect, Alldots[colmn, row].transform.position, Quaternion.identity);
+            findMatchDots.newColmDots.Clear();
+            findMatchDots.newRowDots.Clear();
             Destroy(Alldots[colmn, row]);
             Alldots[colmn, row] = null;
         }

@@ -1,22 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-
 public class FindMatchDots : MonoBehaviour
 {
     public List<GameObject> allMatchesFound = new List<GameObject>();
     private MainBoard mainBoard;
+    public List<GameObject> newColmDots = new List<GameObject>();
+    public List<GameObject> newRowDots = new List<GameObject>();
 
     void Start()
     {
         mainBoard = FindObjectOfType<MainBoard>();
-        if (allMatchesFound != null)
+        if (allMatchesFound != null || newRowDots != null || newColmDots != null)
         {
             if (allMatchesFound.Count > 0)
             {
                 allMatchesFound.Clear();
             }
+            if (newRowDots.Count > 0)
+            {
+                newRowDots.Clear();
+            }
+            if (newColmDots.Count > 0)
+            {
+                newColmDots.Clear();
+            }
         }
+
     }
 
     void Update()
@@ -42,6 +53,22 @@ public class FindMatchDots : MonoBehaviour
                         {
                             if (currentMatch.tag == leftDot.tag && currentMatch.tag == rightDot.tag)
                             {
+                                if (currentMatch.GetComponent<Dots>().isRowBomb || leftDot.GetComponent<Dots>().isRowBomb || rightDot.GetComponent<Dots>().rowArrow)
+                                {
+                                    allMatchesFound.Union(GetAllRowDots(j));
+                                }
+                                if (leftDot.GetComponent<Dots>().isColumnBomb)
+                                {
+                                    allMatchesFound.Union(GetAllColumnDots(i - 1));
+                                }
+                                if (rightDot.GetComponent<Dots>().isColumnBomb)
+                                {
+                                    allMatchesFound.Union(GetAllColumnDots(i + 1));
+                                }
+                                if (!allMatchesFound.Contains(currentMatch))
+                                {
+                                    allMatchesFound.Add(currentMatch);
+                                }
                                 if (!allMatchesFound.Contains(leftDot))
                                 {
                                     allMatchesFound.Add(leftDot);
@@ -70,6 +97,22 @@ public class FindMatchDots : MonoBehaviour
                         {
                             if (currentMatch.tag == upDot.tag && currentMatch.tag == downDot.tag)
                             {
+                                if (currentMatch.GetComponent<Dots>().isColumnBomb || upDot.GetComponent<Dots>().isRowBomb || downDot.GetComponent<Dots>().isRowBomb)
+                                {
+                                    allMatchesFound.Union(GetAllColumnDots(i));
+                                }
+                                /*  if (upDot.GetComponent<Dots>().isRowBomb)
+                                 {
+                                     allMatchesFound.Union(GetAllRowDots(j + 1));
+                                 }
+                                 if (downDot.GetComponent<Dots>().isRowBomb)
+                                 {
+                                     allMatchesFound.Union(GetAllRowDots(j - 1));
+                                 } */
+                                if (!allMatchesFound.Contains(currentMatch))
+                                {
+                                    allMatchesFound.Add(currentMatch);
+                                }
                                 if (!allMatchesFound.Contains(upDot))
                                 {
                                     allMatchesFound.Add(upDot);
@@ -91,4 +134,29 @@ public class FindMatchDots : MonoBehaviour
         }
         //return false;
     }
+    List<GameObject> GetAllColumnDots(int column)
+    {
+        for (int i = 0; i < mainBoard.boardHeight; i++)
+        {
+            if (mainBoard.Alldots[column, i])
+            {
+                mainBoard.Alldots[column, i].GetComponent<Dots>().isFound = true;
+                newColmDots.Add(mainBoard.Alldots[column, i]);
+            }
+        }
+        return newColmDots;
+    }
+    List<GameObject> GetAllRowDots(int row)
+    {
+        for (int i = 0; i < mainBoard.boardWidth; i++)
+        {
+            if (mainBoard.Alldots[i, row])
+            {
+                mainBoard.Alldots[i, row].GetComponent<Dots>().isFound = true;
+                newRowDots.Add(mainBoard.Alldots[i, row]);
+            }
+        }
+        return newRowDots;
+    }
+
 }

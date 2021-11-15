@@ -20,8 +20,14 @@ public class Dots : MonoBehaviour
     public bool isFound = false;
     public float isOkSwipe = 1f;
     private FindMatchDots findNewMethod;
+    public bool isRowBomb;
+    public bool isColumnBomb;
+    public GameObject rowArrow;
+    public GameObject columnArrow;
     void Start()
     {
+        isRowBomb = false;
+        isColumnBomb = false;
         findNewMethod = FindObjectOfType<FindMatchDots>();
         mainBoard = FindObjectOfType<MainBoard>();
         finalX = (int)transform.position.x;
@@ -69,6 +75,21 @@ public class Dots : MonoBehaviour
             transform.position = tempTargetPos;
 
         }
+    }
+    void OnMouseOver()
+    {
+        if (Input.GetMouseButtonDown(1))
+        {
+            isRowBomb = true;
+            GameObject newRowArrow = Instantiate(rowArrow, transform.position, Quaternion.identity);
+            newRowArrow.transform.parent = transform;
+        }
+        /*  if (Input.GetMouseButtonDown(1))
+         {
+             isColumnBomb = true;
+             GameObject newColArrow = Instantiate(columnArrow, transform.position, Quaternion.identity);
+             newColArrow.transform.parent = transform;
+         } */
     }
     void OnMouseDown()
     {
