@@ -121,6 +121,7 @@ public class MainBoard : MonoBehaviour
             findMatchDots.newRowDots.Clear();
             Destroy(Alldots[colmn, row]);
             Alldots[colmn, row] = null;
+            currentDotStatus = DotStatus.move;
         }
     }
     public void DestroyAfterMove()

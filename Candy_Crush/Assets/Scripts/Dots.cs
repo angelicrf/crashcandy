@@ -78,18 +78,18 @@ public class Dots : MonoBehaviour
     }
     void OnMouseOver()
     {
-        if (Input.GetMouseButtonDown(1))
+        /* if (Input.GetMouseButtonDown(1))
         {
             isRowBomb = true;
             GameObject newRowArrow = Instantiate(rowArrow, transform.position, Quaternion.identity);
             newRowArrow.transform.parent = transform;
+        } */
+        if (Input.GetMouseButtonDown(1))
+        {
+            isColumnBomb = true;
+            GameObject newColArrow = Instantiate(columnArrow, transform.position, Quaternion.identity);
+            newColArrow.transform.parent = transform;
         }
-        /*  if (Input.GetMouseButtonDown(1))
-         {
-             isColumnBomb = true;
-             GameObject newColArrow = Instantiate(columnArrow, transform.position, Quaternion.identity);
-             newColArrow.transform.parent = transform;
-         } */
     }
     void OnMouseDown()
     {

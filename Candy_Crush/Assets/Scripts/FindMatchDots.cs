@@ -46,8 +46,8 @@ public class FindMatchDots : MonoBehaviour
                 {
                     if (mainBoard.Alldots[i, j] != null || mainBoard.Alldots[i + 1, j] != null || mainBoard.Alldots[i - 1, j])
                     {
-                        GameObject leftDot = mainBoard.Alldots[i + 1, j];
-                        GameObject rightDot = mainBoard.Alldots[i - 1, j];
+                        GameObject leftDot = mainBoard.Alldots[i - 1, j];
+                        GameObject rightDot = mainBoard.Alldots[i + 1, j];
 
                         if (currentMatch != null && leftDot != null && rightDot != null)
                         {
@@ -56,6 +56,10 @@ public class FindMatchDots : MonoBehaviour
                                 if (currentMatch.GetComponent<Dots>().isRowBomb || leftDot.GetComponent<Dots>().isRowBomb || rightDot.GetComponent<Dots>().rowArrow)
                                 {
                                     allMatchesFound.Union(GetAllRowDots(j));
+                                }
+                                if (currentMatch.GetComponent<Dots>().isColumnBomb)
+                                {
+                                    allMatchesFound.Union(GetAllColumnDots(i));
                                 }
                                 if (leftDot.GetComponent<Dots>().isColumnBomb)
                                 {
@@ -97,18 +101,22 @@ public class FindMatchDots : MonoBehaviour
                         {
                             if (currentMatch.tag == upDot.tag && currentMatch.tag == downDot.tag)
                             {
-                                if (currentMatch.GetComponent<Dots>().isColumnBomb || upDot.GetComponent<Dots>().isRowBomb || downDot.GetComponent<Dots>().isRowBomb)
+                                if (currentMatch.GetComponent<Dots>().isColumnBomb || upDot.GetComponent<Dots>().isColumnBomb || downDot.GetComponent<Dots>().isColumnBomb)
                                 {
                                     allMatchesFound.Union(GetAllColumnDots(i));
                                 }
-                                /*  if (upDot.GetComponent<Dots>().isRowBomb)
-                                 {
-                                     allMatchesFound.Union(GetAllRowDots(j + 1));
-                                 }
-                                 if (downDot.GetComponent<Dots>().isRowBomb)
-                                 {
-                                     allMatchesFound.Union(GetAllRowDots(j - 1));
-                                 } */
+                                if (currentMatch.GetComponent<Dots>().isRowBomb)
+                                {
+                                    allMatchesFound.Union(GetAllRowDots(j));
+                                }
+                                if (upDot.GetComponent<Dots>().isRowBomb)
+                                {
+                                    allMatchesFound.Union(GetAllRowDots(j + 1));
+                                }
+                                if (downDot.GetComponent<Dots>().isRowBomb)
+                                {
+                                    allMatchesFound.Union(GetAllRowDots(j - 1));
+                                }
                                 if (!allMatchesFound.Contains(currentMatch))
                                 {
                                     allMatchesFound.Add(currentMatch);
