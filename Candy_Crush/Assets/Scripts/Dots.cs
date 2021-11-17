@@ -36,13 +36,13 @@ public class Dots : MonoBehaviour
         rowDot = finalY;
         originalDotY = rowDot;
         originalDotX = columnDot;
+        mainBoard.currentDot = this;
     }
 
     void Update()
     {
         finalX = columnDot;
         finalY = rowDot;
-        //FindMatchedDots();
         StartCoroutine(findNewMethod.FoundMatchesDots());
         if (Mathf.Abs((finalX - transform.position.x)) > 0.1)
         {
@@ -73,22 +73,6 @@ public class Dots : MonoBehaviour
         {
             tempTargetPos = new Vector2(transform.position.x, finalY);
             transform.position = tempTargetPos;
-
-        }
-    }
-    void OnMouseOver()
-    {
-        /* if (Input.GetMouseButtonDown(1))
-        {
-            isRowBomb = true;
-            GameObject newRowArrow = Instantiate(rowArrow, transform.position, Quaternion.identity);
-            newRowArrow.transform.parent = transform;
-        } */
-        if (Input.GetMouseButtonDown(1))
-        {
-            isColumnBomb = true;
-            GameObject newColArrow = Instantiate(columnArrow, transform.position, Quaternion.identity);
-            newColArrow.transform.parent = transform;
         }
     }
     void OnMouseDown()
@@ -114,6 +98,7 @@ public class Dots : MonoBehaviour
             angletoChange = Mathf.Atan2(lastDotPosition.y - startDotPosition.y, lastDotPosition.x - startDotPosition.x) * 180 / Mathf.PI;
             MoveDots();
             mainBoard.currentDotStatus = DotStatus.pause;
+            mainBoard.currentDot = this;
         }
         else
         {
@@ -123,7 +108,7 @@ public class Dots : MonoBehaviour
     void MoveDots()
     {
 
-        if ((angletoChange > -45 && angletoChange <= 45 && columnDot < mainBoard.boardWidth - 1))
+        if ((angletoChange > -45 && angletoChange <= 45) && columnDot < mainBoard.boardWidth - 1)
         {
             otherDot = mainBoard.Alldots[columnDot + 1, rowDot];
             otherDot.GetComponent<Dots>().columnDot -= 1;
@@ -201,26 +186,39 @@ public class Dots : MonoBehaviour
         yield return new WaitForSeconds(.5f);
         if (otherDot != null)
         {
-            Debug.Log("otherDot is noNull");
             if (!otherDot.GetComponent<Dots>().isFound)
             {
-                Debug.Log("notMoved");
                 otherDot.GetComponent<Dots>().columnDot = columnDot;
                 otherDot.GetComponent<Dots>().rowDot = rowDot;
                 columnDot = originalDotX;
                 rowDot = originalDotY;
+                mainBoard.currentDot = null;
                 yield return new WaitForSeconds(.5f);
                 mainBoard.currentDotStatus = DotStatus.move;
             }
             else
             {
-                Debug.Log("moved");
                 mainBoard.DestroyAfterMove();
-                yield return new WaitForSeconds(.5f);
-                mainBoard.currentDotStatus = DotStatus.move;
             }
+            // otherDot = null;
         }
-        otherDot = null;
+
+    }
+    public void MakeRowBombs()
+    {
+        Debug.Log("RowDotsBomb Called");
+        isRowBomb = true;
+        GameObject newRowArrow = Instantiate(rowArrow, transform.position, Quaternion.identity);
+        newRowArrow.transform.parent = transform;
+
+    }
+    public void MakeColumnBombs()
+    {
+        Debug.Log("columnDotsBomb Called");
+        isColumnBomb = true;
+        GameObject newColumnArrow = Instantiate(columnArrow, transform.position, Quaternion.identity);
+        newColumnArrow.transform.parent = transform;
+
     }
 
 }

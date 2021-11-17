@@ -18,7 +18,7 @@ public class MainBoard : MonoBehaviour
     public GameObject ballonEffect;
     private bool isDroped;
     private FindMatchDots findMatchDots;
-
+    public Dots currentDot;
     public DotStatus currentDotStatus = DotStatus.move;
 
     void Start()
@@ -47,13 +47,13 @@ public class MainBoard : MonoBehaviour
 
                 GameObject newTiles = Instantiate(mainBackgroundPref, tempPos, Quaternion.identity) as GameObject;
                 newTiles.name = "(" + i + " , " + j + ")";
-                int dotPos = Random.Range(0, dots.Length);
 
+                int dotPos = Random.Range(0, dots.Length);
                 GameObject newDot = Instantiate(dots[dotPos], tempPos, Quaternion.identity);
                 newDot.name = "(" + i + " , " + j + ")";
                 Alldots[i, j] = newDot;
 
-                /* int maxRun = 0;
+                int maxRun = 0;
                 //yield return new WaitForSeconds(0.5f);
                 while (DotMatches(i, j, dots[dotPos]) && maxRun < 100)
                 {
@@ -62,7 +62,7 @@ public class MainBoard : MonoBehaviour
                     maxRun++;
                     yield return new WaitForSeconds(0.5f);
                 }
-                maxRun = 0; */
+                maxRun = 0;
             }
         }
         yield return new WaitForSeconds(0.5f);
@@ -112,13 +112,42 @@ public class MainBoard : MonoBehaviour
     }
     private void DestroyDot(int colmn, int row)
     {
-        Debug.Log("what isFound " + Alldots[colmn, row].GetComponent<Dots>().isFound);
+
         if (Alldots[colmn, row].GetComponent<Dots>().isFound)
         {
-            findMatchDots.allMatchesFound.Remove(Alldots[colmn, row]);
+            //check numbers
+            if (findMatchDots.allMatchesFound != null)
+            {
+                if (findMatchDots.allMatchesFound.Count > 0)
+                {
+                    findMatchDots.CheckDotsBomb();
+                    findMatchDots.allMatchesFound.Remove(Alldots[colmn, row]);
+                }
+            }
             Instantiate(ballonEffect, Alldots[colmn, row].transform.position, Quaternion.identity);
-            findMatchDots.newColmDots.Clear();
-            findMatchDots.newRowDots.Clear();
+            //clear lists
+            if (findMatchDots.allMatchesFound != null)
+            {
+                if (findMatchDots.allMatchesFound.Count > 0)
+                {
+                    findMatchDots.allMatchesFound.Clear();
+                }
+            }
+            if (findMatchDots.newColmDots != null)
+            {
+                if (findMatchDots.newColmDots.Count > 0)
+                {
+                    findMatchDots.newColmDots.Clear();
+                }
+            }
+            if (findMatchDots.newRowDots != null)
+            {
+                if (findMatchDots.newRowDots.Count > 0)
+                {
+                    findMatchDots.newRowDots.Clear();
+                }
+            }
+
             Destroy(Alldots[colmn, row]);
             Alldots[colmn, row] = null;
             currentDotStatus = DotStatus.move;
@@ -168,7 +197,8 @@ public class MainBoard : MonoBehaviour
         {
             for (int j = 0; j < dlRow; j++)
             {
-                {//if array of elements are null  
+                if (thisDot[i, j] == null)
+                {//if array of elements are null 
 
                     Vector2 tempRefillPos = new Vector2(i, j);
                     int thisRefill = Random.Range(0, spDot.Length);
@@ -215,7 +245,7 @@ public class MainBoard : MonoBehaviour
         {
             for (int j = 0; j < boardHeight; j++)
             {
-                if (!Alldots[i, j])
+                if (Alldots[i, j] == null || !Alldots[i, j])
                 {
                     Vector2 tempRefillPos = new Vector2(i, j);
                     int thisRefill = Random.Range(0, dots.Length);
@@ -233,10 +263,11 @@ public class MainBoard : MonoBehaviour
         while (IsMatchedDots())
         {
             yield return new WaitForSeconds(0.5f);
-            Debug.Log("thereisMatch..");
             DestroyAfterMove();
-            yield return new WaitForSeconds(0.5f);
-            currentDotStatus = DotStatus.move;
+
         }
+        // call destroys
+        yield return new WaitForSeconds(0.5f);
+        currentDotStatus = DotStatus.move;
     }
 }

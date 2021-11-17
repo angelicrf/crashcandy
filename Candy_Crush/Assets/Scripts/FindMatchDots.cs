@@ -53,6 +53,19 @@ public class FindMatchDots : MonoBehaviour
                         {
                             if (currentMatch.tag == leftDot.tag && currentMatch.tag == rightDot.tag)
                             {
+
+                                if (!allMatchesFound.Contains(currentMatch))
+                                {
+                                    allMatchesFound.Add(currentMatch);
+                                }
+                                if (!allMatchesFound.Contains(leftDot))
+                                {
+                                    allMatchesFound.Add(leftDot);
+                                }
+                                if (!allMatchesFound.Contains(rightDot))
+                                {
+                                    allMatchesFound.Add(rightDot);
+                                }
                                 if (currentMatch.GetComponent<Dots>().isRowBomb || leftDot.GetComponent<Dots>().isRowBomb || rightDot.GetComponent<Dots>().rowArrow)
                                 {
                                     allMatchesFound.Union(GetAllRowDots(j));
@@ -69,18 +82,7 @@ public class FindMatchDots : MonoBehaviour
                                 {
                                     allMatchesFound.Union(GetAllColumnDots(i + 1));
                                 }
-                                if (!allMatchesFound.Contains(currentMatch))
-                                {
-                                    allMatchesFound.Add(currentMatch);
-                                }
-                                if (!allMatchesFound.Contains(leftDot))
-                                {
-                                    allMatchesFound.Add(leftDot);
-                                }
-                                if (!allMatchesFound.Contains(rightDot))
-                                {
-                                    allMatchesFound.Add(rightDot);
-                                }
+                                mainBoard.currentDot.isFound = true;
                                 currentMatch.GetComponent<Dots>().isFound = true;
                                 leftDot.GetComponent<Dots>().isFound = true;
                                 rightDot.GetComponent<Dots>().isFound = true;
@@ -101,8 +103,22 @@ public class FindMatchDots : MonoBehaviour
                         {
                             if (currentMatch.tag == upDot.tag && currentMatch.tag == downDot.tag)
                             {
+
+                                if (!allMatchesFound.Contains(currentMatch))
+                                {
+                                    allMatchesFound.Add(currentMatch);
+                                }
+                                if (!allMatchesFound.Contains(upDot))
+                                {
+                                    allMatchesFound.Add(upDot);
+                                }
+                                if (!allMatchesFound.Contains(downDot))
+                                {
+                                    allMatchesFound.Add(downDot);
+                                }
                                 if (currentMatch.GetComponent<Dots>().isColumnBomb || upDot.GetComponent<Dots>().isColumnBomb || downDot.GetComponent<Dots>().isColumnBomb)
                                 {
+                                    //Debug.Log("columnBobCalled...");
                                     allMatchesFound.Union(GetAllColumnDots(i));
                                 }
                                 if (currentMatch.GetComponent<Dots>().isRowBomb)
@@ -117,18 +133,7 @@ public class FindMatchDots : MonoBehaviour
                                 {
                                     allMatchesFound.Union(GetAllRowDots(j - 1));
                                 }
-                                if (!allMatchesFound.Contains(currentMatch))
-                                {
-                                    allMatchesFound.Add(currentMatch);
-                                }
-                                if (!allMatchesFound.Contains(upDot))
-                                {
-                                    allMatchesFound.Add(upDot);
-                                }
-                                if (!allMatchesFound.Contains(downDot))
-                                {
-                                    allMatchesFound.Add(downDot);
-                                }
+                                mainBoard.currentDot.isFound = true;
                                 currentMatch.GetComponent<Dots>().isFound = true;
                                 upDot.GetComponent<Dots>().isFound = true;
                                 downDot.GetComponent<Dots>().isFound = true;
@@ -166,5 +171,27 @@ public class FindMatchDots : MonoBehaviour
         }
         return newRowDots;
     }
+    public void CheckDotsBomb()
+    {
+        if (mainBoard.currentDot != null)
+        {
+            if (mainBoard.currentDot.isFound)
+            {
+                Debug.Log("dotCalled");
+                if (allMatchesFound.Count == 6)
+                {
+                    mainBoard.currentDot.MakeRowBombs();
+                }
+                else
+                {
+                    mainBoard.currentDot.MakeColumnBombs();
+                }
+                mainBoard.currentDot.isFound = false;
+            }
+        }
+        /*  else if (mainBoard.currentDot.otherDot != null)
+         {
 
+         } */
+    }
 }
