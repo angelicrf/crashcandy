@@ -97,6 +97,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   angletoChange: 0
+  columnDot: 0
   rowDot: 0
   otherDot: {fileID: 0}
   isFound: 0

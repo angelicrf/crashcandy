@@ -8,7 +8,7 @@ public class Dots : MonoBehaviour
     private Vector2 startDotPosition;
     private Vector2 lastDotPosition;
     public float angletoChange;
-    private int columnDot;
+    public int columnDot;
     public int rowDot;
     private int originalDotX;
     private int originalDotY;
@@ -134,7 +134,7 @@ public class Dots : MonoBehaviour
         }
         StartCoroutine(MoveMatchedDots());
     }
-    bool FindMatchedDots()
+    public bool FindMatchedDots()
     {
         if (columnDot > 0 && columnDot < mainBoard.boardWidth - 1)
         {

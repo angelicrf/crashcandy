@@ -28,7 +28,6 @@ public class MainBoard : MonoBehaviour
         Alldots = new GameObject[boardWidth, boardHeight];
         allTiles = new GameObject[boardWidth, boardHeight];
         isDroped = false;
-
         StartCoroutine(BoardIntilSetUp());
 
     }
@@ -54,13 +53,13 @@ public class MainBoard : MonoBehaviour
                 Alldots[i, j] = newDot;
 
                 int maxRun = 0;
-                //yield return new WaitForSeconds(0.5f);
+
                 while (DotMatches(i, j, dots[dotPos]) && maxRun < 100)
                 {
                     //dotPos = Random.Range(0, dots.Length);
                     DestroyAfterMove();
                     maxRun++;
-                    yield return new WaitForSeconds(0.5f);
+                    //yield return new WaitForSeconds(0.5f);
                 }
                 maxRun = 0;
             }
@@ -106,16 +105,11 @@ public class MainBoard : MonoBehaviour
         }
         return false;
     }
-    private void DeactiveSpriteRnd()
-    {
-        brdSprtRnd.enabled = false;
-    }
-    private void DestroyDot(int colmn, int row)
+    private IEnumerator DestroyDot(int colmn, int row)
     {
 
         if (Alldots[colmn, row].GetComponent<Dots>().isFound)
         {
-            //check numbers
             if (findMatchDots.allMatchesFound != null)
             {
                 if (findMatchDots.allMatchesFound.Count > 0)
@@ -124,8 +118,7 @@ public class MainBoard : MonoBehaviour
                     findMatchDots.allMatchesFound.Remove(Alldots[colmn, row]);
                 }
             }
-            Instantiate(ballonEffect, Alldots[colmn, row].transform.position, Quaternion.identity);
-            //clear lists
+            //bubbles
             if (findMatchDots.allMatchesFound != null)
             {
                 if (findMatchDots.allMatchesFound.Count > 0)
@@ -147,7 +140,9 @@ public class MainBoard : MonoBehaviour
                     findMatchDots.newRowDots.Clear();
                 }
             }
-
+            GameObject allBubbles = Instantiate(ballonEffect, Alldots[colmn, row].transform.position, Quaternion.identity);
+            yield return new WaitForSeconds(0.2f);
+            //Destroy(allBubbles);
             Destroy(Alldots[colmn, row]);
             Alldots[colmn, row] = null;
             currentDotStatus = DotStatus.move;
@@ -155,17 +150,19 @@ public class MainBoard : MonoBehaviour
     }
     public void DestroyAfterMove()
     {
+
         for (int i = 0; i < boardWidth; i++)
         {
             for (int j = 0; j < boardHeight; j++)
             {
                 if (Alldots[i, j])
                 {
-                    DestroyDot(i, j);
+                    StartCoroutine(DestroyDot(i, j));
                 }
             }
         }
         StartCoroutine(RemoveEmptySpace());
+
     }
     private IEnumerator RemoveEmptySpace()
     {
@@ -197,15 +194,13 @@ public class MainBoard : MonoBehaviour
         {
             for (int j = 0; j < dlRow; j++)
             {
-                if (thisDot[i, j] == null)
-                {//if array of elements are null 
-
+                if (!thisDot[i, j])
+                {
                     Vector2 tempRefillPos = new Vector2(i, j);
                     int thisRefill = Random.Range(0, spDot.Length);
                     GameObject newRefillObj = Instantiate(spDot[thisRefill], tempRefillPos, Quaternion.identity);
                     thisDot[i, j] = newRefillObj;
                     newRefillObj.name = "(" + i + " , " + j + ")";
-
                 }
             }
         }
@@ -217,7 +212,7 @@ public class MainBoard : MonoBehaviour
         {
             for (int j = 0; j < boardHeight; j++)
             {
-                if (Alldots[i, j] != null)
+                if (Alldots[i, j])
                 {
                     if (Alldots[i, j].GetComponent<Dots>().isFound)
                     {
@@ -228,30 +223,21 @@ public class MainBoard : MonoBehaviour
         }
         return false;
     }
-    private void ClearBoard()
-    {
-        for (int i = 0; i < boardWidth; i++)
-        {
-            for (int j = 0; j < boardHeight; j++)
-            {
-                Destroy(Alldots[i, j]);
-                Alldots[i, j] = null;
-            }
-        }
-    }
     private void RefilleNewDots()
     {
         for (int i = 0; i < boardWidth; i++)
         {
             for (int j = 0; j < boardHeight; j++)
             {
-                if (Alldots[i, j] == null || !Alldots[i, j])
+                if (Alldots[i, j] == null)
                 {
                     Vector2 tempRefillPos = new Vector2(i, j);
                     int thisRefill = Random.Range(0, dots.Length);
                     GameObject newRefillObj = Instantiate(dots[thisRefill], tempRefillPos, Quaternion.identity);
                     Alldots[i, j] = newRefillObj;
-                    newRefillObj.name = "(" + i + " , " + j + ")";
+                    newRefillObj.GetComponent<Dots>().rowDot = i;
+                    newRefillObj.GetComponent<Dots>().columnDot = j;
+                    //newRefillObj.name = "(" + i + " , " + j + ")";
                 }
             }
         }

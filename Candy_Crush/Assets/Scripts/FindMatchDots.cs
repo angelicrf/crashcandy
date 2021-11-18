@@ -82,7 +82,10 @@ public class FindMatchDots : MonoBehaviour
                                 {
                                     allMatchesFound.Union(GetAllColumnDots(i + 1));
                                 }
-                                mainBoard.currentDot.isFound = true;
+                                if (mainBoard.currentDot)
+                                {
+                                    mainBoard.currentDot.isFound = true;
+                                }
                                 currentMatch.GetComponent<Dots>().isFound = true;
                                 leftDot.GetComponent<Dots>().isFound = true;
                                 rightDot.GetComponent<Dots>().isFound = true;
@@ -133,7 +136,10 @@ public class FindMatchDots : MonoBehaviour
                                 {
                                     allMatchesFound.Union(GetAllRowDots(j - 1));
                                 }
-                                mainBoard.currentDot.isFound = true;
+                                if (mainBoard.currentDot)
+                                {
+                                    mainBoard.currentDot.isFound = true;
+                                }
                                 currentMatch.GetComponent<Dots>().isFound = true;
                                 upDot.GetComponent<Dots>().isFound = true;
                                 downDot.GetComponent<Dots>().isFound = true;
@@ -177,12 +183,11 @@ public class FindMatchDots : MonoBehaviour
         {
             if (mainBoard.currentDot.isFound)
             {
-                Debug.Log("dotCalled");
                 if (allMatchesFound.Count == 6)
                 {
                     mainBoard.currentDot.MakeRowBombs();
                 }
-                else
+                else if (allMatchesFound.Count == 9)
                 {
                     mainBoard.currentDot.MakeColumnBombs();
                 }
