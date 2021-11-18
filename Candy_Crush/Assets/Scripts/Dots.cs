@@ -22,12 +22,15 @@ public class Dots : MonoBehaviour
     private FindMatchDots findNewMethod;
     public bool isRowBomb;
     public bool isColumnBomb;
+    public bool isRainBowBomb;
     public GameObject rowArrow;
     public GameObject columnArrow;
+    public GameObject rainBowBomb;
     void Start()
     {
         isRowBomb = false;
         isColumnBomb = false;
+        isRainBowBomb = false;
         findNewMethod = FindObjectOfType<FindMatchDots>();
         mainBoard = FindObjectOfType<MainBoard>();
         finalX = (int)transform.position.x;
@@ -43,6 +46,7 @@ public class Dots : MonoBehaviour
     {
         finalX = columnDot;
         finalY = rowDot;
+
         StartCoroutine(findNewMethod.FoundMatchesDots());
         if (Mathf.Abs((finalX - transform.position.x)) > 0.1)
         {
@@ -74,6 +78,21 @@ public class Dots : MonoBehaviour
             tempTargetPos = new Vector2(transform.position.x, finalY);
             transform.position = tempTargetPos;
         }
+    }
+    void OnMouseOver()
+    {
+        CallRainBowBomb();
+    }
+    bool CallRainBowBomb()
+    {
+        if (Input.GetMouseButtonDown(1))
+        {
+            isRainBowBomb = true;
+            GameObject newRainBow = Instantiate(rainBowBomb, transform.position, Quaternion.identity);
+            newRainBow.transform.parent = transform;
+            return isRainBowBomb;
+        }
+        return false;
     }
     void OnMouseDown()
     {
@@ -183,10 +202,21 @@ public class Dots : MonoBehaviour
     }
     IEnumerator MoveMatchedDots()
     {
+        if (isRainBowBomb)
+        {
+            findNewMethod.FindColorMatch(otherDot.tag);
+            isFound = true;
+        }
+        else if (otherDot.GetComponent<Dots>().isRainBowBomb)
+        {
+            findNewMethod.FindColorMatch(this.gameObject.tag);
+            otherDot.GetComponent<Dots>().isFound = true;
+        }
         yield return new WaitForSeconds(.5f);
+
         if (otherDot != null)
         {
-            if (!otherDot.GetComponent<Dots>().isFound)
+            if (!isFound || !otherDot.GetComponent<Dots>().isFound)
             {
                 otherDot.GetComponent<Dots>().columnDot = columnDot;
                 otherDot.GetComponent<Dots>().rowDot = rowDot;
@@ -206,7 +236,6 @@ public class Dots : MonoBehaviour
     }
     public void MakeRowBombs()
     {
-        //Debug.Log("RowDotsBomb Called");
         isRowBomb = true;
         GameObject newRowArrow = Instantiate(rowArrow, transform.position, Quaternion.identity);
         newRowArrow.transform.parent = transform;
@@ -214,7 +243,6 @@ public class Dots : MonoBehaviour
     }
     public void MakeColumnBombs()
     {
-        //Debug.Log("columnDotsBomb Called");
         isColumnBomb = true;
         GameObject newColumnArrow = Instantiate(columnArrow, transform.position, Quaternion.identity);
         newColumnArrow.transform.parent = transform;

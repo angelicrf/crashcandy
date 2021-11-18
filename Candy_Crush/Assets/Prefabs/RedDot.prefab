@@ -106,6 +106,7 @@ MonoBehaviour:
   isColumnBomb: 0
   rowArrow: {fileID: 861191043094186095, guid: 014c794e8dbcbcf49a906fa3154b410d, type: 3}
   columnArrow: {fileID: 6934349105861626717, guid: 469d1a826effbcd868d350a1cc64861b, type: 3}
+  rainBowBomb: {fileID: 1439174049790710743, guid: ea8308f8e38209182a04d5e593d02d45, type: 3}
 --- !u!58 &-1578389512097115317
 CircleCollider2D:
   m_ObjectHideFlags: 0

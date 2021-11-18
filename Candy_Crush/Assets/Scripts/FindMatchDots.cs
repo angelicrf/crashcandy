@@ -35,6 +35,22 @@ public class FindMatchDots : MonoBehaviour
     {
 
     }
+    public void FindColorMatch(string thisColor)
+    {
+        for (int i = 0; i < mainBoard.boardWidth; i++)
+        {
+            for (int j = 0; j < mainBoard.boardHeight; j++)
+            {
+                if (mainBoard.Alldots[i, j])
+                {
+                    if (mainBoard.Alldots[i, j].tag == thisColor)
+                    {
+                        mainBoard.Alldots[i, j].GetComponent<Dots>().isFound = true;
+                    }
+                }
+            }
+        }
+    }
     public IEnumerator FoundMatchesDots()
     {
         yield return new WaitForSeconds(0.4f);

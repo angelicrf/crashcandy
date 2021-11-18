@@ -250,6 +250,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allMatchesFound: []
+  newColmDots: []
+  newRowDots: []
 --- !u!1 &2121662492
 GameObject:
   m_ObjectHideFlags: 0
@@ -308,4 +310,5 @@ MonoBehaviour:
   - {fileID: 5356668694054886133, guid: e41bd7bf767a9c44fbe62d460eaecd53, type: 3}
   - {fileID: 4996225643662510867, guid: c1e93a6f538371281b4b8f33e9a10d11, type: 3}
   ballonEffect: {fileID: 4477579567210601822, guid: 4a947f5b30e5db24f95439a19e6fd705, type: 3}
+  currentDot: {fileID: 0}
   currentDotStatus: 0
