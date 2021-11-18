@@ -206,7 +206,7 @@ public class Dots : MonoBehaviour
     }
     public void MakeRowBombs()
     {
-        Debug.Log("RowDotsBomb Called");
+        //Debug.Log("RowDotsBomb Called");
         isRowBomb = true;
         GameObject newRowArrow = Instantiate(rowArrow, transform.position, Quaternion.identity);
         newRowArrow.transform.parent = transform;
@@ -214,7 +214,7 @@ public class Dots : MonoBehaviour
     }
     public void MakeColumnBombs()
     {
-        Debug.Log("columnDotsBomb Called");
+        //Debug.Log("columnDotsBomb Called");
         isColumnBomb = true;
         GameObject newColumnArrow = Instantiate(columnArrow, transform.position, Quaternion.identity);
         newColumnArrow.transform.parent = transform;

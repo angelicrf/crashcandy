@@ -8,10 +8,11 @@ public class FindMatchDots : MonoBehaviour
     private MainBoard mainBoard;
     public List<GameObject> newColmDots = new List<GameObject>();
     public List<GameObject> newRowDots = new List<GameObject>();
-
+    //public Dots otherDot;
     void Start()
     {
         mainBoard = FindObjectOfType<MainBoard>();
+        // otherDot = mainBoard.currentDot.otherDot.GetComponent<Dots>();
         if (allMatchesFound != null || newRowDots != null || newColmDots != null)
         {
             if (allMatchesFound.Count > 0)
@@ -86,6 +87,10 @@ public class FindMatchDots : MonoBehaviour
                                 {
                                     mainBoard.currentDot.isFound = true;
                                 }
+                                if (mainBoard.currentDot.otherDot)
+                                {
+                                    mainBoard.currentDot.otherDot.GetComponent<Dots>().isFound = true;
+                                }
                                 currentMatch.GetComponent<Dots>().isFound = true;
                                 leftDot.GetComponent<Dots>().isFound = true;
                                 rightDot.GetComponent<Dots>().isFound = true;
@@ -140,6 +145,10 @@ public class FindMatchDots : MonoBehaviour
                                 {
                                     mainBoard.currentDot.isFound = true;
                                 }
+                                if (mainBoard.currentDot.otherDot)
+                                {
+                                    mainBoard.currentDot.otherDot.GetComponent<Dots>().isFound = true;
+                                }
                                 currentMatch.GetComponent<Dots>().isFound = true;
                                 upDot.GetComponent<Dots>().isFound = true;
                                 downDot.GetComponent<Dots>().isFound = true;
@@ -193,10 +202,22 @@ public class FindMatchDots : MonoBehaviour
                 }
                 mainBoard.currentDot.isFound = false;
             }
+            else if (mainBoard.currentDot.otherDot)
+            {
+                if (mainBoard.currentDot.otherDot.GetComponent<Dots>().isFound)
+                {
+                    if (allMatchesFound.Count == 6)
+                    {
+                        mainBoard.currentDot.otherDot.GetComponent<Dots>().MakeRowBombs();
+                    }
+                    else if (allMatchesFound.Count == 9)
+                    {
+                        mainBoard.currentDot.otherDot.GetComponent<Dots>().MakeColumnBombs();
+                    }
+                    mainBoard.currentDot.otherDot.GetComponent<Dots>().isFound = false;
+                }
+            }
         }
-        /*  else if (mainBoard.currentDot.otherDot != null)
-         {
 
-         } */
     }
 }

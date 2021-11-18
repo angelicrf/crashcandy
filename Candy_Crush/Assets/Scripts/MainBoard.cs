@@ -142,7 +142,7 @@ public class MainBoard : MonoBehaviour
             }
             GameObject allBubbles = Instantiate(ballonEffect, Alldots[colmn, row].transform.position, Quaternion.identity);
             yield return new WaitForSeconds(0.2f);
-            //Destroy(allBubbles);
+            Destroy(allBubbles);
             Destroy(Alldots[colmn, row]);
             Alldots[colmn, row] = null;
             currentDotStatus = DotStatus.move;
