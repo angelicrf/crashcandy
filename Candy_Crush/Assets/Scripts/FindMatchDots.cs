@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,52 +71,16 @@ public class FindMatchDots : MonoBehaviour
                         {
                             if (currentMatch.tag == leftDot.tag && currentMatch.tag == rightDot.tag)
                             {
-
-                                if (!allMatchesFound.Contains(currentMatch))
-                                {
-                                    allMatchesFound.Add(currentMatch);
-                                }
-                                if (!allMatchesFound.Contains(leftDot))
-                                {
-                                    allMatchesFound.Add(leftDot);
-                                }
-                                if (!allMatchesFound.Contains(rightDot))
-                                {
-                                    allMatchesFound.Add(rightDot);
-                                }
-                                if (currentMatch.GetComponent<Dots>().isRowBomb || leftDot.GetComponent<Dots>().isRowBomb || rightDot.GetComponent<Dots>().rowArrow)
-                                {
-                                    allMatchesFound.Union(GetAllRowDots(j));
-                                }
-                                if (currentMatch.GetComponent<Dots>().isColumnBomb)
-                                {
-                                    allMatchesFound.Union(GetAllColumnDots(i));
-                                }
-                                if (leftDot.GetComponent<Dots>().isColumnBomb)
-                                {
-                                    allMatchesFound.Union(GetAllColumnDots(i - 1));
-                                }
-                                if (rightDot.GetComponent<Dots>().isColumnBomb)
-                                {
-                                    allMatchesFound.Union(GetAllColumnDots(i + 1));
-                                }
-                                if (mainBoard.currentDot)
-                                {
-                                    mainBoard.currentDot.isFound = true;
-                                }
-                                if (mainBoard.currentDot.otherDot)
-                                {
-                                    mainBoard.currentDot.otherDot.GetComponent<Dots>().isFound = true;
-                                }
-                                currentMatch.GetComponent<Dots>().isFound = true;
-                                leftDot.GetComponent<Dots>().isFound = true;
-                                rightDot.GetComponent<Dots>().isFound = true;
-
-                                //return currentMatch.GetComponent<Dots>().isFound;
+                                AddAllMAtches(currentMatch);
+                                AddAllMAtches(leftDot);
+                                AddAllMAtches(rightDot);
+                                UnionColumnnsLists(currentMatch, leftDot, rightDot);
+                                UnionRowsLists(currentMatch, leftDot, rightDot);
+                                ChangeIsFoundValue();
                             }
                         }
                     }
-                }//
+                }
                 if (j > 0 && j < mainBoard.boardHeight - 1)
                 {
                     if (mainBoard.Alldots[i, j] != null || mainBoard.Alldots[i, j - 1] != null || mainBoard.Alldots[i, j + 1])
@@ -127,56 +92,75 @@ public class FindMatchDots : MonoBehaviour
                         {
                             if (currentMatch.tag == upDot.tag && currentMatch.tag == downDot.tag)
                             {
-
-                                if (!allMatchesFound.Contains(currentMatch))
-                                {
-                                    allMatchesFound.Add(currentMatch);
-                                }
-                                if (!allMatchesFound.Contains(upDot))
-                                {
-                                    allMatchesFound.Add(upDot);
-                                }
-                                if (!allMatchesFound.Contains(downDot))
-                                {
-                                    allMatchesFound.Add(downDot);
-                                }
-                                if (currentMatch.GetComponent<Dots>().isColumnBomb || upDot.GetComponent<Dots>().isColumnBomb || downDot.GetComponent<Dots>().isColumnBomb)
-                                {
-                                    //Debug.Log("columnBobCalled...");
-                                    allMatchesFound.Union(GetAllColumnDots(i));
-                                }
-                                if (currentMatch.GetComponent<Dots>().isRowBomb)
-                                {
-                                    allMatchesFound.Union(GetAllRowDots(j));
-                                }
-                                if (upDot.GetComponent<Dots>().isRowBomb)
-                                {
-                                    allMatchesFound.Union(GetAllRowDots(j + 1));
-                                }
-                                if (downDot.GetComponent<Dots>().isRowBomb)
-                                {
-                                    allMatchesFound.Union(GetAllRowDots(j - 1));
-                                }
-                                if (mainBoard.currentDot)
-                                {
-                                    mainBoard.currentDot.isFound = true;
-                                }
-                                if (mainBoard.currentDot.otherDot)
-                                {
-                                    mainBoard.currentDot.otherDot.GetComponent<Dots>().isFound = true;
-                                }
-                                currentMatch.GetComponent<Dots>().isFound = true;
-                                upDot.GetComponent<Dots>().isFound = true;
-                                downDot.GetComponent<Dots>().isFound = true;
-
-                                //return currentMatch.GetComponent<Dots>().isFound;
+                                AddAllMAtches(currentMatch);
+                                AddAllMAtches(upDot);
+                                AddAllMAtches(downDot);
+                                UnionRowsLists(currentMatch, upDot, downDot);
+                                UnionColumnnsLists(currentMatch, upDot, downDot);
+                                ChangeIsFoundValue();
                             }
                         }
                     }
                 }
             }
         }
-        //return false;
+    }
+    private bool ChangeIsFoundValue()
+    {
+        if (mainBoard.currentDot)
+        {
+            mainBoard.currentDot.isFound = true;
+            return mainBoard.currentDot.isFound;
+        }
+        if (mainBoard.currentDot.otherDot)
+        {
+            mainBoard.currentDot.otherDot.GetComponent<Dots>().isFound = true;
+            return mainBoard.currentDot.otherDot.GetComponent<Dots>().isFound;
+        }
+        return false;
+    }
+    private void UnionColumnnsLists(GameObject dot1, GameObject dot2, GameObject dot3)
+    {
+        if (dot1.GetComponent<Dots>().isColumnBomb)
+        {
+            allMatchesFound.Union(GetAllColumnDots(dot1.GetComponent<Dots>().columnDot));
+        }
+        if (dot2.GetComponent<Dots>().isColumnBomb)
+        {
+            allMatchesFound.Union(GetAllColumnDots(dot2.GetComponent<Dots>().columnDot - 1));
+        }
+        if (dot3.GetComponent<Dots>().isColumnBomb)
+        {
+            allMatchesFound.Union(GetAllColumnDots(dot3.GetComponent<Dots>().columnDot + 1));
+        }
+        dot1.GetComponent<Dots>().isFound = true;
+        dot2.GetComponent<Dots>().isFound = true;
+        dot3.GetComponent<Dots>().isFound = true;
+    }
+    private void UnionRowsLists(GameObject dot1, GameObject dot2, GameObject dot3)
+    {
+        if (dot1.GetComponent<Dots>().isRowBomb)
+        {
+            allMatchesFound.Union(GetAllRowDots(dot1.GetComponent<Dots>().rowDot));
+        }
+        if (dot2.GetComponent<Dots>().isRowBomb)
+        {
+            allMatchesFound.Union(GetAllRowDots(dot2.GetComponent<Dots>().rowDot + 1));
+        }
+        if (dot3.GetComponent<Dots>().isRowBomb)
+        {
+            allMatchesFound.Union(GetAllRowDots(dot3.GetComponent<Dots>().rowDot - 1));
+        }
+        dot1.GetComponent<Dots>().isFound = true;
+        dot2.GetComponent<Dots>().isFound = true;
+        dot3.GetComponent<Dots>().isFound = true;
+    }
+    private void AddAllMAtches(GameObject thisItem)
+    {
+        if (!allMatchesFound.Contains(thisItem))
+        {
+            allMatchesFound.Add(thisItem);
+        }
     }
     List<GameObject> GetAllColumnDots(int column)
     {
@@ -208,11 +192,12 @@ public class FindMatchDots : MonoBehaviour
         {
             if (mainBoard.currentDot.isFound)
             {
-                if (allMatchesFound.Count == 6)
+                if ((mainBoard.currentDot.angletoChange <= 45 && mainBoard.currentDot.angletoChange > -45)
+                  || (mainBoard.currentDot.angletoChange <= 135 || mainBoard.currentDot.angletoChange > -135))
                 {
                     mainBoard.currentDot.MakeRowBombs();
                 }
-                else if (allMatchesFound.Count == 9)
+                else
                 {
                     mainBoard.currentDot.MakeColumnBombs();
                 }
@@ -222,11 +207,12 @@ public class FindMatchDots : MonoBehaviour
             {
                 if (mainBoard.currentDot.otherDot.GetComponent<Dots>().isFound)
                 {
-                    if (allMatchesFound.Count == 6)
+                    if ((mainBoard.currentDot.angletoChange <= 45 && mainBoard.currentDot.angletoChange > -45)
+                     || (mainBoard.currentDot.angletoChange <= 135 || mainBoard.currentDot.angletoChange > -135))
                     {
                         mainBoard.currentDot.otherDot.GetComponent<Dots>().MakeRowBombs();
                     }
-                    else if (allMatchesFound.Count == 9)
+                    else
                     {
                         mainBoard.currentDot.otherDot.GetComponent<Dots>().MakeColumnBombs();
                     }
@@ -234,6 +220,5 @@ public class FindMatchDots : MonoBehaviour
                 }
             }
         }
-
     }
 }

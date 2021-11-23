@@ -110,36 +110,7 @@ public class MainBoard : MonoBehaviour
 
         if (Alldots[colmn, row].GetComponent<Dots>().isFound)
         {
-            if (findMatchDots.allMatchesFound != null)
-            {
-                if (findMatchDots.allMatchesFound.Count > 0)
-                {
-                    findMatchDots.CheckDotsBomb();
-                    findMatchDots.allMatchesFound.Remove(Alldots[colmn, row]);
-                }
-            }
-            //bubbles
-            if (findMatchDots.allMatchesFound != null)
-            {
-                if (findMatchDots.allMatchesFound.Count > 0)
-                {
-                    findMatchDots.allMatchesFound.Clear();
-                }
-            }
-            if (findMatchDots.newColmDots != null)
-            {
-                if (findMatchDots.newColmDots.Count > 0)
-                {
-                    findMatchDots.newColmDots.Clear();
-                }
-            }
-            if (findMatchDots.newRowDots != null)
-            {
-                if (findMatchDots.newRowDots.Count > 0)
-                {
-                    findMatchDots.newRowDots.Clear();
-                }
-            }
+            // clear matches lists
             GameObject allBubbles = Instantiate(ballonEffect, Alldots[colmn, row].transform.position, Quaternion.identity);
             yield return new WaitForSeconds(0.2f);
             Destroy(allBubbles);
@@ -159,6 +130,37 @@ public class MainBoard : MonoBehaviour
                 {
                     StartCoroutine(DestroyDot(i, j));
                 }
+            }
+        }
+        //clear matches list
+        if (findMatchDots.allMatchesFound != null)
+        {
+            if (findMatchDots.allMatchesFound.Count == 9 || findMatchDots.allMatchesFound.Count == 6)
+            {
+                findMatchDots.CheckDotsBomb();
+                //findMatchDots.allMatchesFound.Remove(Alldots[colmn, row]);
+            }
+        }
+        //bubbles
+        if (findMatchDots.allMatchesFound != null)
+        {
+            if (findMatchDots.allMatchesFound.Count > 0)
+            {
+                findMatchDots.allMatchesFound.Clear();
+            }
+        }
+        if (findMatchDots.newColmDots != null)
+        {
+            if (findMatchDots.newColmDots.Count > 0)
+            {
+                findMatchDots.newColmDots.Clear();
+            }
+        }
+        if (findMatchDots.newRowDots != null)
+        {
+            if (findMatchDots.newRowDots.Count > 0)
+            {
+                findMatchDots.newRowDots.Clear();
             }
         }
         StartCoroutine(RemoveEmptySpace());
