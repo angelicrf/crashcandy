@@ -163,6 +163,13 @@ public class MainBoard : MonoBehaviour
                 findMatchDots.newRowDots.Clear();
             }
         }
+        if (findMatchDots.newAdjacentDots != null)
+        {
+            if (findMatchDots.newRowDots.Count > 0)
+            {
+                findMatchDots.newRowDots.Clear();
+            }
+        }
         StartCoroutine(RemoveEmptySpace());
 
     }

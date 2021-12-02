@@ -9,6 +9,7 @@ public class FindMatchDots : MonoBehaviour
     private MainBoard mainBoard;
     public List<GameObject> newColmDots = new List<GameObject>();
     public List<GameObject> newRowDots = new List<GameObject>();
+    public List<GameObject> newAdjacentDots = new List<GameObject>();
     //public Dots otherDot;
     void Start()
     {
@@ -76,6 +77,7 @@ public class FindMatchDots : MonoBehaviour
                                 AddAllMAtches(rightDot);
                                 UnionColumnnsLists(currentMatch, leftDot, rightDot);
                                 UnionRowsLists(currentMatch, leftDot, rightDot);
+                                UnionAdjacentLists(currentMatch, leftDot, rightDot);
                                 ChangeIsFoundValue();
                             }
                         }
@@ -97,6 +99,7 @@ public class FindMatchDots : MonoBehaviour
                                 AddAllMAtches(downDot);
                                 UnionRowsLists(currentMatch, upDot, downDot);
                                 UnionColumnnsLists(currentMatch, upDot, downDot);
+                                UnionAdjacentLists(currentMatch, upDot, downDot);
                                 ChangeIsFoundValue();
                             }
                         }
@@ -137,6 +140,24 @@ public class FindMatchDots : MonoBehaviour
         dot2.GetComponent<Dots>().isFound = true;
         dot3.GetComponent<Dots>().isFound = true;
     }
+    private void UnionAdjacentLists(GameObject dot1, GameObject dot2, GameObject dot3)
+    {
+        if (dot1.GetComponent<Dots>().isAdjacent)
+        {
+            allMatchesFound.Union(GetAdjacentDots(dot1.GetComponent<Dots>().columnDot, dot1.GetComponent<Dots>().rowDot));
+        }
+        if (dot2.GetComponent<Dots>().isAdjacent)
+        {
+            allMatchesFound.Union(GetAdjacentDots(dot2.GetComponent<Dots>().columnDot, dot2.GetComponent<Dots>().rowDot));
+        }
+        if (dot3.GetComponent<Dots>().isAdjacent)
+        {
+            allMatchesFound.Union(GetAdjacentDots(dot3.GetComponent<Dots>().columnDot, dot3.GetComponent<Dots>().rowDot));
+        }
+        dot1.GetComponent<Dots>().isFound = true;
+        dot2.GetComponent<Dots>().isFound = true;
+        dot3.GetComponent<Dots>().isFound = true;
+    }
     private void UnionRowsLists(GameObject dot1, GameObject dot2, GameObject dot3)
     {
         if (dot1.GetComponent<Dots>().isRowBomb)
@@ -161,6 +182,22 @@ public class FindMatchDots : MonoBehaviour
         {
             allMatchesFound.Add(thisItem);
         }
+    }
+    List<GameObject> GetAdjacentDots(int column, int row)
+    {
+        for (int i = column - 1; i <= column + 1; i++)
+        {
+            for (int j = row - 1; j <= row + 1; j++)
+            {
+                if (i >= 0 && i < mainBoard.boardWidth && j >= 0 && j < mainBoard.boardHeight)
+                {
+                    mainBoard.Alldots[i, j].GetComponent<Dots>().isFound = true;
+                    newAdjacentDots.Add(mainBoard.Alldots[i, j]);
+                }
+            }
+        }
+
+        return newAdjacentDots;
     }
     List<GameObject> GetAllColumnDots(int column)
     {

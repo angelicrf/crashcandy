@@ -26,11 +26,14 @@ public class Dots : MonoBehaviour
     public GameObject rowArrow;
     public GameObject columnArrow;
     public GameObject rainBowBomb;
+    public bool isAdjacent;
+    public GameObject adjacentBomb;
     void Start()
     {
         isRowBomb = false;
         isColumnBomb = false;
         isRainBowBomb = false;
+        isAdjacent = false;
         findNewMethod = FindObjectOfType<FindMatchDots>();
         mainBoard = FindObjectOfType<MainBoard>();
         finalX = (int)transform.position.x;
@@ -87,10 +90,14 @@ public class Dots : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(1))
         {
-            isRainBowBomb = true;
+            /* isRainBowBomb = true;
             GameObject newRainBow = Instantiate(rainBowBomb, transform.position, Quaternion.identity);
             newRainBow.transform.parent = transform;
-            return isRainBowBomb;
+            return isRainBowBomb; */
+            isAdjacent = true;
+            GameObject adjBomb = Instantiate(adjacentBomb, transform.position, Quaternion.identity);
+            adjBomb.transform.parent = transform;
+            return isAdjacent;
         }
         return false;
     }
