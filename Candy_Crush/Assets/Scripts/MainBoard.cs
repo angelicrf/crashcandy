@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using Unity.Collections;
 using UnityEditor.EditorTools;
 using UnityEngine;
 
@@ -59,7 +60,6 @@ public class MainBoard : MonoBehaviour
                     //dotPos = Random.Range(0, dots.Length);
                     DestroyAfterMove();
                     maxRun++;
-                    //yield return new WaitForSeconds(0.5f);
                 }
                 maxRun = 0;
             }
@@ -135,13 +135,15 @@ public class MainBoard : MonoBehaviour
         //clear matches list
         if (findMatchDots.allMatchesFound != null)
         {
-            if (findMatchDots.allMatchesFound.Count == 9 || findMatchDots.allMatchesFound.Count == 6)
-            {
-                findMatchDots.CheckDotsBomb();
-                //findMatchDots.allMatchesFound.Remove(Alldots[colmn, row]);
-            }
+            MakeVariousBumbs();
         }
         //bubbles
+        //clear all Lists
+        StartCoroutine(RemoveEmptySpace());
+
+    }
+    private void ClearAllLists()
+    {
         if (findMatchDots.allMatchesFound != null)
         {
             if (findMatchDots.allMatchesFound.Count > 0)
@@ -170,8 +172,102 @@ public class MainBoard : MonoBehaviour
                 findMatchDots.newRowDots.Clear();
             }
         }
-        StartCoroutine(RemoveEmptySpace());
+    }
+    private bool DefineColumnRow()
+    {
+        int horizantal = 0;
+        int vertical = 0;
+        Dots dotCompare = findMatchDots.allMatchesFound[0].GetComponent<Dots>();
+        if (dotCompare)
+        {
+            foreach (GameObject thisObj in findMatchDots.allMatchesFound)
+            {
+                Dots thisDot = thisObj.GetComponent<Dots>();
+                if (dotCompare.rowDot == thisDot.rowDot)
+                {
+                    horizantal++;
+                }
+                if (dotCompare.columnDot == thisDot.columnDot)
+                {
+                    vertical++;
+                }
 
+            }
+        }
+        return (horizantal == 5 || vertical == 5);
+    }
+    private void MakeVariousBumbs()
+    {
+        if (findMatchDots.allMatchesFound.Count == 9 || findMatchDots.allMatchesFound.Count == 6)
+        {
+            findMatchDots.CheckDotsBomb();
+            //findMatchDots.allMatchesFound.Remove(Alldots[colmn, row]);
+        }
+        if (findMatchDots.allMatchesFound.Count == 4 || findMatchDots.allMatchesFound.Count == 8)
+        {
+            Debug.Log("adjacent dots");
+            if (DefineColumnRow())
+            {
+                if (currentDot)
+                {
+                    if (currentDot.isFound)
+                    {
+                        if (!currentDot.isRainBowBomb)
+                        {
+                            currentDot.isFound = false;
+                            currentDot.MakeColorBomb();
+                        }
+                    }
+                }
+                else
+                {
+                    if (currentDot.otherDot)
+                    {
+                        Dots newOtherDot = currentDot.otherDot.GetComponent<Dots>();
+                        if (newOtherDot.isFound)
+                        {
+                            if (!newOtherDot.isRainBowBomb)
+                            {
+                                newOtherDot.isFound = false;
+                                newOtherDot.MakeColorBomb();
+                            }
+
+                        }
+                    }
+                }
+
+            }
+            else
+            {
+                if (currentDot)
+                {
+                    if (currentDot.isFound)
+                    {
+                        if (!currentDot.isAdjacent)
+                        {
+                            currentDot.isFound = false;
+                            currentDot.MakeAdjecentBomb();
+                        }
+                    }
+                }
+                else
+                {
+                    if (currentDot.otherDot)
+                    {
+                        Dots newOtherDot = currentDot.otherDot.GetComponent<Dots>();
+                        if (newOtherDot.isFound)
+                        {
+                            if (!newOtherDot.isAdjacent)
+                            {
+                                newOtherDot.isFound = false;
+                                newOtherDot.MakeAdjecentBomb();
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
     }
     private IEnumerator RemoveEmptySpace()
     {
@@ -194,6 +290,7 @@ public class MainBoard : MonoBehaviour
             countDown = 0;
         }
         yield return new WaitForSeconds(0.5f);
+        ClearAllLists();
         StartCoroutine(StepsToRefile());
     }
     delegate void RefilleDot(int dlCol, int dlRow, GameObject[,] thisDot, GameObject[] spDot);
@@ -232,8 +329,9 @@ public class MainBoard : MonoBehaviour
         }
         return false;
     }
-    private void RefilleNewDots()
+    private IEnumerator RefilleNewDots()
     {
+        yield return new WaitForSeconds(0.5f);
         for (int i = 0; i < boardWidth; i++)
         {
             for (int j = 0; j < boardHeight; j++)
@@ -253,7 +351,7 @@ public class MainBoard : MonoBehaviour
     }
     private IEnumerator StepsToRefile()
     {
-        RefilleNewDots();
+        StartCoroutine(RefilleNewDots());
         yield return new WaitForSeconds(0.7f);
         while (IsMatchedDots())
         {

@@ -29,6 +29,10 @@ public class FindMatchDots : MonoBehaviour
             {
                 newColmDots.Clear();
             }
+            if (newAdjacentDots.Count > 0)
+            {
+                newAdjacentDots.Clear();
+            }
         }
 
     }
@@ -113,13 +117,14 @@ public class FindMatchDots : MonoBehaviour
         if (mainBoard.currentDot)
         {
             mainBoard.currentDot.isFound = true;
+            if (mainBoard.currentDot.otherDot)
+            {
+                mainBoard.currentDot.otherDot.GetComponent<Dots>().isFound = true;
+                return mainBoard.currentDot.otherDot.GetComponent<Dots>().isFound;
+            }
             return mainBoard.currentDot.isFound;
         }
-        if (mainBoard.currentDot.otherDot)
-        {
-            mainBoard.currentDot.otherDot.GetComponent<Dots>().isFound = true;
-            return mainBoard.currentDot.otherDot.GetComponent<Dots>().isFound;
-        }
+
         return false;
     }
     private void UnionColumnnsLists(GameObject dot1, GameObject dot2, GameObject dot3)
@@ -191,8 +196,11 @@ public class FindMatchDots : MonoBehaviour
             {
                 if (i >= 0 && i < mainBoard.boardWidth && j >= 0 && j < mainBoard.boardHeight)
                 {
-                    mainBoard.Alldots[i, j].GetComponent<Dots>().isFound = true;
-                    newAdjacentDots.Add(mainBoard.Alldots[i, j]);
+                    if (mainBoard.Alldots[i, j])
+                    {
+                        mainBoard.Alldots[i, j].GetComponent<Dots>().isFound = true;
+                        newAdjacentDots.Add(mainBoard.Alldots[i, j]);
+                    }
                 }
             }
         }
@@ -225,7 +233,7 @@ public class FindMatchDots : MonoBehaviour
     }
     public void CheckDotsBomb()
     {
-        if (mainBoard.currentDot != null)
+        if (mainBoard.currentDot)
         {
             if (mainBoard.currentDot.isFound)
             {

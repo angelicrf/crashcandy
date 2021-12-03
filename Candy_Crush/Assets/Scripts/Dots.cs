@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -82,25 +83,21 @@ public class Dots : MonoBehaviour
             transform.position = tempTargetPos;
         }
     }
-    void OnMouseOver()
-    {
-        CallRainBowBomb();
-    }
-    bool CallRainBowBomb()
-    {
-        if (Input.GetMouseButtonDown(1))
-        {
-            /* isRainBowBomb = true;
-            GameObject newRainBow = Instantiate(rainBowBomb, transform.position, Quaternion.identity);
-            newRainBow.transform.parent = transform;
-            return isRainBowBomb; */
-            isAdjacent = true;
-            GameObject adjBomb = Instantiate(adjacentBomb, transform.position, Quaternion.identity);
-            adjBomb.transform.parent = transform;
-            return isAdjacent;
-        }
-        return false;
-    }
+    /*  void OnMouseOver()
+     {
+         CallRainBowBomb();
+     }
+     bool CallRainBowBomb()
+     {
+         if (Input.GetMouseButtonDown(1))
+         {
+             isAdjacent = true;
+             GameObject adjBomb = Instantiate(adjacentBomb, transform.position, Quaternion.identity);
+             adjBomb.transform.parent = transform;
+             return isAdjacent;
+         }
+         return false;
+     } */
     void OnMouseDown()
     {
         if (mainBoard.currentDotStatus == DotStatus.move)
@@ -254,6 +251,20 @@ public class Dots : MonoBehaviour
         GameObject newColumnArrow = Instantiate(columnArrow, transform.position, Quaternion.identity);
         newColumnArrow.transform.parent = transform;
 
+    }
+    public bool MakeAdjecentBomb()
+    {
+        isAdjacent = true;
+        GameObject adjBomb = Instantiate(adjacentBomb, transform.position, Quaternion.identity);
+        adjBomb.transform.parent = transform;
+        return isAdjacent;
+    }
+    public bool MakeColorBomb()
+    {
+        isRainBowBomb = true;
+        GameObject newRainBow = Instantiate(rainBowBomb, transform.position, Quaternion.identity);
+        newRainBow.transform.parent = transform;
+        return isRainBowBomb;
     }
 
 }
