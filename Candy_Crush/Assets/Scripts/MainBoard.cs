@@ -132,12 +132,10 @@ public class MainBoard : MonoBehaviour
                 }
             }
         }
-        //clear matches list
         if (findMatchDots.allMatchesFound != null)
         {
             MakeVariousBumbs();
         }
-        //bubbles
         //clear all Lists
         StartCoroutine(RemoveEmptySpace());
 
@@ -342,8 +340,8 @@ public class MainBoard : MonoBehaviour
                     int thisRefill = Random.Range(0, dots.Length);
                     GameObject newRefillObj = Instantiate(dots[thisRefill], tempRefillPos, Quaternion.identity);
                     Alldots[i, j] = newRefillObj;
-                    newRefillObj.GetComponent<Dots>().rowDot = i;
-                    newRefillObj.GetComponent<Dots>().columnDot = j;
+                    newRefillObj.GetComponent<Dots>().rowDot = j;
+                    newRefillObj.GetComponent<Dots>().columnDot = i;
                     //newRefillObj.name = "(" + i + " , " + j + ")";
                 }
             }

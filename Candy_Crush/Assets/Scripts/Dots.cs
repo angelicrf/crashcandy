@@ -41,8 +41,8 @@ public class Dots : MonoBehaviour
         finalY = (int)transform.position.y;
         columnDot = finalX;
         rowDot = finalY;
-        originalDotY = rowDot;
-        originalDotX = columnDot;
+        //originalDotY = rowDot;
+        //originalDotX = columnDot;
         mainBoard.currentDot = this;
     }
 
@@ -119,8 +119,8 @@ public class Dots : MonoBehaviour
         if (Mathf.Abs(lastDotPosition.y - startDotPosition.y) > isOkSwipe || Mathf.Abs(lastDotPosition.x - startDotPosition.x) > isOkSwipe)
         {
             angletoChange = Mathf.Atan2(lastDotPosition.y - startDotPosition.y, lastDotPosition.x - startDotPosition.x) * 180 / Mathf.PI;
-            MoveDots();
             mainBoard.currentDotStatus = DotStatus.pause;
+            MoveDots();
             mainBoard.currentDot = this;
         }
         else
@@ -128,34 +128,61 @@ public class Dots : MonoBehaviour
             mainBoard.currentDotStatus = DotStatus.move;
         }
     }
+    private void MoveIntoDirection(Vector2 thisDir)
+    {
+        otherDot = mainBoard.Alldots[columnDot + (int)thisDir.x, (int)thisDir.y];
+        originalDotX = columnDot;
+        originalDotY = rowDot;
+        otherDot.GetComponent<Dots>().columnDot += -1 * (int)thisDir.x;
+        otherDot.GetComponent<Dots>().rowDot += -1 * (int)thisDir.y;
+        columnDot += (int)thisDir.x;
+        rowDot += (int)thisDir.y;
+        StartCoroutine(MoveMatchedDots());
+    }
     void MoveDots()
     {
-
-        if ((angletoChange > -45 && angletoChange <= 45) && columnDot < mainBoard.boardWidth - 1)
+        if (angletoChange > -45 && angletoChange <= 45 && columnDot < mainBoard.boardWidth - 1)
         {
+            originalDotX = columnDot;
+            originalDotY = rowDot;
             otherDot = mainBoard.Alldots[columnDot + 1, rowDot];
             otherDot.GetComponent<Dots>().columnDot -= 1;
             columnDot += 1;
+            StartCoroutine(MoveMatchedDots());
+
+            //MoveIntoDirection(Vector2.right);
         }
-        else if ((angletoChange > 45 && angletoChange <= 135) && rowDot < mainBoard.boardHeight - 1)
+        else if (angletoChange > 45 && angletoChange <= 135 && rowDot < mainBoard.boardHeight - 1)
         {
+            originalDotX = columnDot;
+            originalDotY = rowDot;
             otherDot = mainBoard.Alldots[columnDot, rowDot + 1];
             otherDot.GetComponent<Dots>().rowDot -= 1;
             rowDot += 1;
+            StartCoroutine(MoveMatchedDots());
+            //MoveIntoDirection(Vector2.up);
         }
-        else if ((angletoChange < -45 && angletoChange >= -135) && rowDot > 0)
+        else if (angletoChange < -45 && angletoChange >= -135 && rowDot > 0)
         {
+            originalDotX = columnDot;
+            originalDotY = rowDot;
             otherDot = mainBoard.Alldots[columnDot, rowDot - 1];
             otherDot.GetComponent<Dots>().rowDot += 1;
             rowDot -= 1;
+            StartCoroutine(MoveMatchedDots());
+            //MoveIntoDirection(Vector2.down);
         }
         else if ((angletoChange > 135 || angletoChange <= -135) && columnDot > 0)
         {
+            originalDotX = columnDot;
+            originalDotY = rowDot;
             otherDot = mainBoard.Alldots[columnDot - 1, rowDot];
             otherDot.GetComponent<Dots>().columnDot += 1;
             columnDot -= 1;
+            StartCoroutine(MoveMatchedDots());
+            //MoveIntoDirection(Vector2.left);
         }
-        StartCoroutine(MoveMatchedDots());
+        mainBoard.currentDotStatus = DotStatus.move;
     }
     public bool FindMatchedDots()
     {
