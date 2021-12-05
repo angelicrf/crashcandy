@@ -30,7 +30,6 @@ public class MainBoard : MonoBehaviour
         allTiles = new GameObject[boardWidth, boardHeight];
         isDroped = false;
         StartCoroutine(BoardIntilSetUp());
-
     }
 
     void Update()
